@@ -3,6 +3,22 @@
   "version": "1.0.0",
   "modify": "2023.11.17",
   "author": "sunhaobo",
+  "database": {
+    "godv": {
+      "hostname": "mysql11146w.zll.yun.qianxin-inc.cn",
+      "username": "godv",
+      "password": "7dde2636c4939967",
+      "database": "godv",
+      "port": 11146
+    },
+    "network": {
+      "hostname": "mysql11069w.idc-shjt2.yun.qianxin-inc.cn",
+      "username": "networking",
+      "password": "855d9f86405f296f",
+      "database": "networking",
+      "port": 11069
+    }
+  },
   "SEC":{
   "api_key": "HJepQrWG3stE",
   "api_pass": "m7btvR3U5C4dQA1KaPLkVJhZziFrDgp8",
