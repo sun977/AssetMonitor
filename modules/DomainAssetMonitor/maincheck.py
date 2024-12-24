@@ -54,9 +54,9 @@ def insert_record(domain, record_type, record_info):
                 "ON DUPLICATE KEY UPDATE "
                 "recordValue='%s', priority='%s', weight='%s', port='%s', target='%s', updateTime=CURRENT_TIMESTAMP;" % (
                     domain, record_type, record_info.get('record_value', ''),
-                    record_info.get('priority', 0),  # 字段类型是int，所以默认为0，不然mysql汇报错 【1366, "Incorrect integer value: '' for column 'priority' at row 1"】
-                    record_info.get('weight', 0),
-                    record_info.get('port', 0),
+                    record_info.get('priority', ''),  # 字段类型是int，所以默认为0，不然mysql汇报错 【1366, "Incorrect integer value: '' for column 'priority' at row 1"】 -- 改成 vachar
+                    record_info.get('weight', ''),
+                    record_info.get('port', ''),
                     record_info.get('target', ''),
                     # 重复一遍用于 ON DUPLICATE KEY UPDATE 部分
                     record_info.get('record_value', ''),
@@ -174,7 +174,7 @@ def get_sec_domain_records():
                 # print(f"{record_type}: {records}")
                 for record_info in records:    # 为什么这样可行？
                     insert_record(domain, record_type, record_info)
-                    logging.info(f"{record_type}: Inserted {record_info['record_value']}")
+                    logging.info(f"{record_type}: Mysql Inserted {record_info['record_value']}")
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
 
 
