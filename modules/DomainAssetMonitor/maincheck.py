@@ -153,9 +153,9 @@ def get_sec_domain_records():
     record_types = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SRV']
 
     # 获取SEC所有域名
-    # alldomains = get_domain_from_sec()
+    alldomains = get_domain_from_sec()
     # 从文件中读取域名
-    alldomains = read_domains_from_file('domains2.txt')
+    # alldomains = read_domains_from_file('domains.txt')
 
 
     # 循环域名
@@ -183,3 +183,4 @@ if __name__ == '__main__':
     logging.info("Starting asset monitoring script")
     # print(len(get_domain_from_sec()))
     get_sec_domain_records()
+    logging.info("Asset monitoring script completed")
