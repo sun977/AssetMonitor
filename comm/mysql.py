@@ -100,7 +100,7 @@ class SQL(object):
             else:
                 self.conn.commit()  # 提交操作（不报错就提交执行sql语句）
         except Exception as error:
-            print(self.time, 'public.mysql.SQL.__exit__ have error: %s' % error)
+            print(self.time, 'comm.mysql.SQL.__exit__ have error: %s' % error)
             # raise error
         finally:
             self.cursor.close()  # 关闭游标对象
@@ -177,12 +177,12 @@ class MySQL:
                     data = []
                     msg = 'no data found'
             except pymysql.err.ProgrammingError as error:
-                print(self.time, 'public.mysql.MySQL.exec have error: %s' % error)
+                print(self.time, 'comm.mysql.MySQL.exec have error: %s' % error)
                 state = 0
                 data = []
                 msg = error.args
             except Exception as error:
-                print(self.time, 'public.mysql.MySQL.exec have error: %s' % error)
+                print(self.time, 'comm.mysql.MySQL.exec have error: %s' % error)
                 state = 0
                 data = []
                 msg = error

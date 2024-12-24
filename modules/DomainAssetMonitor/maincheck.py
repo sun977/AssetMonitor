@@ -12,15 +12,19 @@
 # 引用SEC接口
 from modules.SecAPI.sec.getSecApiClient import *
 import dns.resolver
+from comm.mysql import *
 
 
-
+# 从文件中读取域名
 def read_domains_from_file(file_path):
     """Read domains from a file and return them as a list."""
     with open(file_path, 'r') as file:
         domains = [line.strip() for line in file if line.strip()]
     return domains
 
+# 封装数据插入数据库
+def insert_record(domain, record_type, record_info):
+    pass
 
 
 # 获取全量的域名信息【从中只挑主域名】
