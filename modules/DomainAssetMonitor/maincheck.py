@@ -115,6 +115,7 @@ def get_sec_domain_records():
 
 
 
+
 if __name__ == '__main__':
     # print(len(get_domain_from_sec()))
     get_sec_domain_records()
