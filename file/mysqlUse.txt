@@ -1,0 +1,23 @@
+    def insert(self):
+        sql = (
+                "insert into asset_detail(ip, port, state, service, product, version, extrainfo, "
+                "protocol, banner, url, login, status_code, server, x_powered_by, "
+                "title, subtitle, footer, cms, response) values "
+                "('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', "
+                "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') "
+                "on duplicate key update "
+                "state='%s', service='%s', product='%s', version='%s', extrainfo='%s', "
+                "protocol='%s', banner='%s', url='%s', login='%s', status_code='%s', server='%s', x_powered_by='%s', "
+                "title='%s', subtitle='%s', footer='%s', cms='%s', response='%s', updateTime=now()" % (
+                    self.ip, self.port, self.state, self.service, self.product, self.version, self.extrainfo,
+                    self.protocol, self.banner, self.url, self.login, self.status_code, self.server, self.x_powered_by,
+                    self.title, self.subtitle, self.footer, self.cms, self.response,
+                    self.state, self.service, self.product, self.version, self.extrainfo,
+                    self.protocol, self.banner, self.url, self.login, self.status_code, self.server, self.x_powered_by,
+                    self.title, self.subtitle, self.footer, self.cms, self.response
+                )
+        )
+
+        MySQL(sql=sql).exec
+
+        return sql

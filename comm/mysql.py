@@ -191,6 +191,6 @@ class MySQL:
 
 
 if __name__ == '__main__':
-    sql = "select * from asset_ip limit 10"
-    res = MySQL(sql=sql).exec()  # 可用 20221115
+    sql = "select * from asset_dns limit 10"
+    res = MySQL(sql=sql).exec()  # 可用 20241223
     print(res)

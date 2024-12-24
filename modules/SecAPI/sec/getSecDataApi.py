@@ -20,7 +20,7 @@ import time
 import hashlib
 import requests
 import os
-from SecAPI.tools.getconfig import *
+from comm.getconfig import *
 
 requests.packages.urllib3.disable_warnings()
 
