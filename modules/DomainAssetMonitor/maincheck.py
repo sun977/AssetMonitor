@@ -18,13 +18,14 @@ from logging.handlers import RotatingFileHandler
 
 # 配置日志记录器
 logging.basicConfig(
-    level=logging.DEBUG,  # 设置日志级别
+    # level=logging.DEBUG,  # 设置日志级别 详细信息
+    level=logging.INFO,  # 设置日志级别 确认程序按预期工作
     format='%(asctime)s[%(levelname)s] %(message)s',  # 设置日志格式
     datefmt='%Y-%m-%d %H:%M:%S',  # 设置日期格式
     handlers=[
         RotatingFileHandler(
             "../../log/asset_monitor.log",  # 将日志写入文件
-            maxBytes=10*1024*1024,  # 最大文件大小为 10MB
+            maxBytes=20*1024*1024,  # 最大文件大小为 20MB
             backupCount=5  # 最多保留 5 个备份文件
         ),
         logging.StreamHandler()  # 同时输出到控制台
@@ -52,7 +53,7 @@ def insert_record(domain, record_type, record_info):
                 "INSERT INTO asset_dns_records (domain, recordType, recordValue, priority, weight, port, target) "
                 "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') "
                 "ON DUPLICATE KEY UPDATE "
-                "recordValue='%s', priority='%s', weight='%s', port='%s', target='%s', updateTime=CURRENT_TIMESTAMP;" % (
+                "recordValue='%s', priority='%s', weight='%s', port='%s', target='%s', updateTime=CURRENT_TIMESTAMP(6);" % (
                     domain, record_type, record_info.get('record_value', ''),
                     record_info.get('priority', ''),  # 字段类型是int，所以默认为0，不然mysql汇报错 【1366, "Incorrect integer value: '' for column 'priority' at row 1"】 -- 改成 vachar
                     record_info.get('weight', ''),
@@ -88,6 +89,7 @@ def get_domain_from_sec():
         allMainDomainsList = []
         if res is None:
             print('sec接口返回数据为空')
+            logging.warning('sec接口返回数据为空')
             return allMainDomainsList
         else:
             for domain in res:
@@ -129,7 +131,7 @@ def get_records(domain, record_type):
         else:
             records = [{'record_value': answer.to_text()[:2048]} for answer in answers]  # 截断过长的记录值
 
-        logging.debug(f"Retrieved {len(records)} {record_type} records for domain {domain}")
+        logging.info(f"Retrieved {len(records)} {record_type} records for domain {domain}")
         return records
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         logging.warning(f"No {record_type} record found for domain {domain}")
@@ -164,15 +166,15 @@ def get_sec_domain_records():
         # 循环解析类型
         for record_type in record_types:
             records = get_records(domain, record_type)
-            if records is None:
+            if records is None:   # 记录为空
                 logging.info(f"{record_type}: No record found")
                 # print(f"{record_type}: No record found")
-            elif isinstance(records, str):
-                logging.warning(f"{record_type}: {records}")
+            elif isinstance(records, str):   # 返回为字符串,说明报错了
+                logging.warning(f"A error for resolving {record_type} record: {records}")
                 # print(f"{record_type}: {records}")
-            else:
+            else:  # 说明有记录，进入循环插入
                 # print(f"{record_type}: {records}")
-                for record_info in records:    # 为什么这样可行？
+                for record_info in records:    #
                     insert_record(domain, record_type, record_info)
                     logging.info(f"{record_type}: Mysql Inserted {record_info['record_value']}")
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
@@ -184,3 +186,4 @@ if __name__ == '__main__':
     # print(len(get_domain_from_sec()))
     get_sec_domain_records()
     logging.info("Asset monitoring script completed")
+    # 运行了1小时

@@ -1,0 +1,52 @@
+C:\Users\root\AppData\Local\Programs\Python\Python39\python.exe C:/Users/root/Desktop/code/PythonCode/code_03/AssetMonitor/modules/DomainAssetMonitor/maincheck.py
+
+Checking records for domain: soft.qianxin.com
+A: Inserted 61.174.41.35
+A: Inserted 61.160.224.60
+A: Inserted 180.97.168.72
+AAAA: Inserted 240e:c3:2002:5::e5
+CNAME: Inserted fed37b6433c36e57.qaxanyu.com.
+MX: No record found
+NS: No record found
+TXT: Inserted Vr0Nupj/sLBu7cKApv1Z5UpZlzdz0EV/K3WOgchacd4=
+TXT: Inserted globalsign-domain-verification=svqYZ-iNUjtJzVgwJEkhXCRGkuT66iVd0ADI6i8bq1
+SRV: No record found
+
+Checking records for domain: ngfwup.sg.qianxin.com
+A: Inserted 123.6.23.14
+AAAA: No record found
+CNAME: Inserted ngfwup.sg.qianxincdn.com.
+MX: No record found
+NS: No record found
+TXT: No record found
+SRV: No record found
+
+Checking records for domain: pre.vd.b.qianxincdn.com
+A: Inserted 36.99.137.57
+AAAA: No record found
+CNAME: No record found
+MX: No record found
+NS: No record found
+TXT: No record found
+SRV: No record found
+
+Checking records for domain: lx.comisys.net
+A: No record found
+AAAA: No record found
+CNAME: No record found
+MX: Inserted hzmx02.mxmail.netease.com.
+MX: Inserted hzmx01.mxmail.netease.com.
+NS: No record found
+TXT: Inserted v=spf1 include:spf.163.com -all
+SRV: No record found
+
+Checking records for domain: qns.lanxin.cn
+A: Timeout
+AAAA: Timeout
+CNAME: Timeout
+MX: Timeout
+NS: Inserted qns1.lanxin.cn.
+TXT: Timeout
+SRV: Timeout
+
+进程已结束，退出代码为 0
