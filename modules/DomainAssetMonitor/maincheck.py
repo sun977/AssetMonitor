@@ -24,7 +24,36 @@ def read_domains_from_file(file_path):
 
 # 封装数据插入数据库
 def insert_record(domain, record_type, record_info):
-    pass
+    """
+    封装插入sql语句
+    :param domain:
+    :param record_type:
+    :param record_info:
+    :return:
+    """
+    # record_info = {'record_value': '192.168.1.1', 'priority': 10, 'weight': 5, 'port': 80, 'target': 'example.com'}
+    sql = (
+            "INSERT INTO asset_dns_records (domain, recordType, recordValue, priority, weight, port, target) "
+            "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s') "
+            "ON DUPLICATE KEY UPDATE "
+            "recordValue='%s', priority='%s', weight='%s', port='%s', target='%s', updateTime=CURRENT_TIMESTAMP;" % (
+                domain, record_type, record_info.get('record_value', ''),
+                record_info.get('priority', 0),  # 字段类型是int，所以默认为0，不然mysql汇报错 【1366, "Incorrect integer value: '' for column 'priority' at row 1"】
+                record_info.get('weight', 0),
+                record_info.get('port', 0),
+                record_info.get('target', ''),
+                # 重复一遍用于 ON DUPLICATE KEY UPDATE 部分
+                record_info.get('record_value', ''),
+                record_info.get('priority', ''),
+                record_info.get('weight', ''),
+                record_info.get('port', ''),
+                record_info.get('target', ''),
+            )
+    )
+
+    # 调用mysql插入函数
+    MySQL(sql=sql).exec()
+    return sql
 
 
 # 获取全量的域名信息【从中只挑主域名】
@@ -99,12 +128,13 @@ def get_sec_domain_records():
     # 获取SEC所有域名
     # alldomains = get_domain_from_sec()
     # 从文件中读取域名
-    alldomains = read_domains_from_file('domains.txt')
+    alldomains = read_domains_from_file('domains2.txt')
 
 
     # 循环域名
     for domain in alldomains:
         print(f"\nChecking records for domain: {domain}")
+        # 循环解析类型
         for record_type in record_types:
             records = get_records(domain, record_type)
             if records is None:
@@ -112,11 +142,10 @@ def get_sec_domain_records():
             elif isinstance(records, str):
                 print(f"{record_type}: {records}")
             else:
-                print(f"{record_type}: {records}")
-
-
-
-
+                # print(f"{record_type}: {records}")
+                for record_info in records:    # 为什么这样可行？
+                    insert_record(domain, record_type, record_info)
+                    print(f"{record_type}: Inserted {record_info['record_value']}")
 
 
 
