@@ -1,25 +1,28 @@
 C:\Users\root\AppData\Local\Programs\Python\Python39\python.exe C:/Users/root/Desktop/code/PythonCode/code_03/AssetMonitor/modules/DomainAssetMonitor/maincheck.py
 
-Checking records for domain: goku.qianxin-inc.cn
-A: [{'record_value': '10.57.24.13'}]
+Checking records for domain: soft.qianxin.com
+A: Inserted 61.174.41.35
+A: Inserted 61.160.224.60
+A: Inserted 180.97.168.72
+AAAA: Inserted 240e:c3:2002:5::e5
+CNAME: Inserted fed37b6433c36e57.qaxanyu.com.
+MX: No record found
+NS: No record found
+TXT: Inserted Vr0Nupj/sLBu7cKApv1Z5UpZlzdz0EV/K3WOgchacd4=
+TXT: Inserted globalsign-domain-verification=svqYZ-iNUjtJzVgwJEkhXCRGkuT66iVd0ADI6i8bq1
+SRV: No record found
+
+Checking records for domain: ngfwup.sg.qianxin.com
+A: Inserted 123.6.23.14
 AAAA: No record found
-CNAME: [{'record_value': 'tap.qianxin-inc.cn.', 'target': 'tap.qianxin-inc.cn.'}]
+CNAME: Inserted ngfwup.sg.qianxincdn.com.
 MX: No record found
 NS: No record found
 TXT: No record found
 SRV: No record found
 
-Checking records for domain: gongzi.qianxin-inc.cn
-A: [{'record_value': '10.57.24.13'}]
-AAAA: No record found
-CNAME: [{'record_value': 'tap.qianxin-inc.cn.', 'target': 'tap.qianxin-inc.cn.'}]
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
-
-Checking records for domain: ldev.lanxin.cn
-A: No record found
+Checking records for domain: pre.vd.b.qianxincdn.com
+A: Inserted 36.99.137.57
 AAAA: No record found
 CNAME: No record found
 MX: No record found
@@ -31,108 +34,19 @@ Checking records for domain: lx.comisys.net
 A: No record found
 AAAA: No record found
 CNAME: No record found
-MX: [{'record_value': 'hzmx02.mxmail.netease.com.', 'priority': 10}, {'record_value': 'hzmx01.mxmail.netease.com.', 'priority': 5}]
+MX: Inserted hzmx02.mxmail.netease.com.
+MX: Inserted hzmx01.mxmail.netease.com.
 NS: No record found
-TXT: [{'record_value': 'v=spf1 include:spf.163.com -all'}]
+TXT: Inserted v=spf1 include:spf.163.com -all
 SRV: No record found
 
-Checking records for domain: txt.qianxin.com
-A: No record found
-AAAA: No record found
-CNAME: No record found
-MX: No record found
-NS: No record found
-TXT: [{'record_value': 'cdn-domain-verificatio=2dsokq299ojdpwoklasdfeisdfi4hgafdiegsdfsdfdgssd202101121623'}]
-SRV: No record found
-
-Checking records for domain: mydomain.lx.comisys.net
-A: No record found
-AAAA: No record found
-CNAME: No record found
-MX: No record found
-NS: No record found
-TXT: [{'record_value': 'ZaYzrJgWvSVtU3dUbQb5GW3h53rhjEK9'}]
-SRV: No record found
-
-Checking records for domain: taishi.qianxin.com
-A: [{'record_value': '124.232.185.38'}]
-AAAA: [{'record_value': '240e:c3:2002:5::e5'}]
-CNAME: [{'record_value': 'c29fc63c9b893e63.qaxanyu.com.', 'target': 'c29fc63c9b893e63.qaxanyu.com.'}]
-MX: No record found
-NS: No record found
-TXT: [{'record_value': '2020031602390331kpmchiqpvx0wv0f4r52vsi4cke923g4zqfac20hzewsgvttl'}]
-SRV: No record found
-
-Checking records for domain: iot.qianxin.com
-A: No record found
-AAAA: No record found
-CNAME: No record found
-MX: No record found
-NS: No record found
-TXT: [{'record_value': 'globalsign-domain-verification=REvfs4BKKqQz9XK7aLe3YZ10Av48F-Q95Suef03l8b'}, {'record_value': '202204181106014h9u3w3xyrww7zjq44ni3xw9eckjom4ts8z7oust3ytvmaulgy'}]
-SRV: No record found
-
-Checking records for domain: tac-assets.qianxin.com
-A: [{'record_value': '124.232.185.38'}]
-AAAA: [{'record_value': '240e:c3:2002:5::e5'}]
-CNAME: [{'record_value': '385c6fe0345cfc4e.qaxanyu.com.', 'target': '385c6fe0345cfc4e.qaxanyu.com.'}]
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
-
-Checking records for domain: sdl.qianxin.com
-A: No record found
-AAAA: No record found
-CNAME: [{'record_value': 'sdl.qianxin.com.trpcdn.net.', 'target': 'sdl.qianxin.com.trpcdn.net.'}]
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
-
-Checking records for domain: proxy.spider.qianxin-inc.cn
-A: [{'record_value': '10.45.3.11'}, {'record_value': '10.45.3.9'}, {'record_value': '10.45.3.8'}, {'record_value': '10.45.3.10'}]
-AAAA: No record found
-CNAME: No record found
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
-
-Checking records for domain: ctest.b.qianxin.com
-A: No record found
-AAAA: No record found
-CNAME: [{'record_value': 'ctest.b.qianxin.com.trpcdn.net.', 'target': 'ctest.b.qianxin.com.trpcdn.net.'}]
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
-
-Checking records for domain: soft.qianxin.com
-A: [{'record_value': '124.232.185.38'}]
-AAAA: [{'record_value': '240e:978:303::ff'}]
-CNAME: [{'record_value': 'fed37b6433c36e57.qaxanyu.com.', 'target': 'fed37b6433c36e57.qaxanyu.com.'}]
-MX: No record found
-NS: No record found
-TXT: [{'record_value': 'Vr0Nupj/sLBu7cKApv1Z5UpZlzdz0EV/K3WOgchacd4='}, {'record_value': 'globalsign-domain-verification=svqYZ-iNUjtJzVgwJEkhXCRGkuT66iVd0ADI6i8bq1'}]
-SRV: No record found
-
-Checking records for domain: ngfwup.sg.qianxin.com
-A: [{'record_value': '123.6.23.14'}]
-AAAA: No record found
-CNAME: [{'record_value': 'ngfwup.sg.qianxincdn.com.', 'target': 'ngfwup.sg.qianxincdn.com.'}]
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
-
-Checking records for domain: pre.vd.b.qianxincdn.com
-A: [{'record_value': '36.99.137.57'}]
-AAAA: No record found
-CNAME: No record found
-MX: No record found
-NS: No record found
-TXT: No record found
-SRV: No record found
+Checking records for domain: qns.lanxin.cn
+A: Timeout
+AAAA: Timeout
+CNAME: Timeout
+MX: Timeout
+NS: Inserted qns1.lanxin.cn.
+TXT: Timeout
+SRV: Timeout
 
 进程已结束，退出代码为 0

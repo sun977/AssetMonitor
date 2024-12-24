@@ -1,0 +1,217 @@
+2024-12-24 20:28:25,505 - [INFO] - Starting asset monitoring script
+2024-12-24 20:28:25,516 - [DEBUG] - Retrieved 1 A records for domain soft.qianxin.com
+2024-12-24 20:28:25,550 - [INFO] - A: Inserted 124.232.185.38
+2024-12-24 20:28:25,557 - [DEBUG] - Retrieved 1 AAAA records for domain soft.qianxin.com
+2024-12-24 20:28:25,580 - [INFO] - AAAA: Inserted 240e:c3:2002:5::e5
+2024-12-24 20:28:25,611 - [DEBUG] - Retrieved 1 CNAME records for domain soft.qianxin.com
+2024-12-24 20:28:25,619 - [INFO] - CNAME: Inserted fed37b6433c36e57.qaxanyu.com.
+2024-12-24 20:28:25,625 - [WARNING] - No MX record found for domain soft.qianxin.com
+2024-12-24 20:28:25,626 - [INFO] - MX: No record found
+2024-12-24 20:28:25,651 - [WARNING] - No NS record found for domain soft.qianxin.com
+2024-12-24 20:28:25,652 - [INFO] - NS: No record found
+2024-12-24 20:28:25,716 - [WARNING] - No TXT record found for domain soft.qianxin.com
+2024-12-24 20:28:25,716 - [INFO] - TXT: No record found
+2024-12-24 20:28:25,749 - [WARNING] - No SRV record found for domain soft.qianxin.com
+2024-12-24 20:28:25,749 - [INFO] - SRV: No record found
+2024-12-24 20:28:25,777 - [DEBUG] - Retrieved 1 A records for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:25,796 - [INFO] - A: Inserted 123.6.23.14
+2024-12-24 20:28:25,825 - [WARNING] - No AAAA record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:25,826 - [INFO] - AAAA: No record found
+2024-12-24 20:28:25,853 - [DEBUG] - Retrieved 1 CNAME records for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:25,873 - [INFO] - CNAME: Inserted ngfwup.sg.qianxincdn.com.
+2024-12-24 20:28:25,906 - [WARNING] - No MX record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:25,906 - [INFO] - MX: No record found
+2024-12-24 20:28:25,942 - [WARNING] - No NS record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:25,943 - [INFO] - NS: No record found
+2024-12-24 20:28:26,013 - [WARNING] - No TXT record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:26,014 - [INFO] - TXT: No record found
+2024-12-24 20:28:26,066 - [WARNING] - No SRV record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:28:26,067 - [INFO] - SRV: No record found
+2024-12-24 20:28:26,095 - [DEBUG] - Retrieved 1 A records for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,134 - [INFO] - A: Inserted 36.99.137.57
+2024-12-24 20:28:26,159 - [WARNING] - No AAAA record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,160 - [INFO] - AAAA: No record found
+2024-12-24 20:28:26,187 - [WARNING] - No CNAME record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,187 - [INFO] - CNAME: No record found
+2024-12-24 20:28:26,214 - [WARNING] - No MX record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,215 - [INFO] - MX: No record found
+2024-12-24 20:28:26,256 - [WARNING] - No NS record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,257 - [INFO] - NS: No record found
+2024-12-24 20:28:26,281 - [WARNING] - No TXT record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,282 - [INFO] - TXT: No record found
+2024-12-24 20:28:26,288 - [WARNING] - No SRV record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:28:26,289 - [INFO] - SRV: No record found
+2024-12-24 20:28:28,689 - [WARNING] - No A record found for domain lx.comisys.net
+2024-12-24 20:28:28,690 - [INFO] - A: No record found
+2024-12-24 20:28:31,731 - [WARNING] - No AAAA record found for domain lx.comisys.net
+2024-12-24 20:28:31,731 - [INFO] - AAAA: No record found
+2024-12-24 20:28:35,291 - [WARNING] - No CNAME record found for domain lx.comisys.net
+2024-12-24 20:28:35,291 - [INFO] - CNAME: No record found
+2024-12-24 20:28:37,162 - [DEBUG] - Retrieved 2 MX records for domain lx.comisys.net
+2024-12-24 20:28:37,188 - [INFO] - MX: Inserted hzmx01.mxmail.netease.com.
+2024-12-24 20:28:37,219 - [INFO] - MX: Inserted hzmx02.mxmail.netease.com.
+2024-12-24 20:28:39,828 - [WARNING] - No NS record found for domain lx.comisys.net
+2024-12-24 20:28:39,829 - [INFO] - NS: No record found
+2024-12-24 20:28:42,294 - [DEBUG] - Retrieved 1 TXT records for domain lx.comisys.net
+2024-12-24 20:28:42,327 - [INFO] - TXT: Inserted v=spf1 include:spf.163.com -all
+2024-12-24 20:28:45,093 - [WARNING] - No SRV record found for domain lx.comisys.net
+2024-12-24 20:28:45,094 - [INFO] - SRV: No record found
+2024-12-24 20:28:50,105 - [WARNING] - Timeout while resolving A record for domain qns.lanxin.cn
+2024-12-24 20:28:50,106 - [WARNING] - A: Timeout
+2024-12-24 20:28:55,116 - [WARNING] - Timeout while resolving AAAA record for domain qns.lanxin.cn
+2024-12-24 20:28:55,117 - [WARNING] - AAAA: Timeout
+2024-12-24 20:29:00,126 - [WARNING] - Timeout while resolving CNAME record for domain qns.lanxin.cn
+2024-12-24 20:29:00,127 - [WARNING] - CNAME: Timeout
+2024-12-24 20:29:05,135 - [WARNING] - Timeout while resolving MX record for domain qns.lanxin.cn
+2024-12-24 20:29:05,136 - [WARNING] - MX: Timeout
+2024-12-24 20:29:05,454 - [DEBUG] - Retrieved 1 NS records for domain qns.lanxin.cn
+2024-12-24 20:29:05,486 - [INFO] - NS: Inserted qns1.lanxin.cn.
+2024-12-24 20:29:10,498 - [WARNING] - Timeout while resolving TXT record for domain qns.lanxin.cn
+2024-12-24 20:29:10,499 - [WARNING] - TXT: Timeout
+2024-12-24 20:29:15,500 - [WARNING] - Timeout while resolving SRV record for domain qns.lanxin.cn
+2024-12-24 20:29:15,501 - [WARNING] - SRV: Timeout
+2024-12-24 20:29:24,603 [INFO]:Starting asset monitoring script
+2024-12-24 20:29:24,614 [DEBUG]:Retrieved 1 A records for domain soft.qianxin.com
+2024-12-24 20:29:24,646 [INFO]:A: Inserted 124.232.185.38
+2024-12-24 20:29:24,652 [DEBUG]:Retrieved 1 AAAA records for domain soft.qianxin.com
+2024-12-24 20:29:24,675 [INFO]:AAAA: Inserted 240e:c3:2002:5::e5
+2024-12-24 20:29:24,703 [DEBUG]:Retrieved 1 CNAME records for domain soft.qianxin.com
+2024-12-24 20:29:24,722 [INFO]:CNAME: Inserted fed37b6433c36e57.qaxanyu.com.
+2024-12-24 20:29:24,754 [WARNING]:No MX record found for domain soft.qianxin.com
+2024-12-24 20:29:24,755 [INFO]:MX: No record found
+2024-12-24 20:29:24,763 [WARNING]:No NS record found for domain soft.qianxin.com
+2024-12-24 20:29:24,763 [INFO]:NS: No record found
+2024-12-24 20:29:24,810 [WARNING]:No TXT record found for domain soft.qianxin.com
+2024-12-24 20:29:24,811 [INFO]:TXT: No record found
+2024-12-24 20:29:24,882 [WARNING]:No SRV record found for domain soft.qianxin.com
+2024-12-24 20:29:24,883 [INFO]:SRV: No record found
+2024-12-24 20:29:24,913 [DEBUG]:Retrieved 1 A records for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:24,943 [INFO]:A: Inserted 123.6.23.14
+2024-12-24 20:29:24,950 [WARNING]:No AAAA record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:24,951 [INFO]:AAAA: No record found
+2024-12-24 20:29:24,994 [DEBUG]:Retrieved 1 CNAME records for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:25,029 [INFO]:CNAME: Inserted ngfwup.sg.qianxincdn.com.
+2024-12-24 20:29:25,062 [WARNING]:No MX record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:25,063 [INFO]:MX: No record found
+2024-12-24 20:29:25,071 [WARNING]:No NS record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:25,071 [INFO]:NS: No record found
+2024-12-24 20:29:25,078 [WARNING]:No TXT record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:25,079 [INFO]:TXT: No record found
+2024-12-24 20:29:25,149 [WARNING]:No SRV record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:29:25,150 [INFO]:SRV: No record found
+2024-12-24 20:29:25,174 [DEBUG]:Retrieved 1 A records for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,198 [INFO]:A: Inserted 36.99.137.57
+2024-12-24 20:29:25,205 [WARNING]:No AAAA record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,205 [INFO]:AAAA: No record found
+2024-12-24 20:29:25,216 [WARNING]:No CNAME record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,217 [INFO]:CNAME: No record found
+2024-12-24 20:29:25,222 [WARNING]:No MX record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,223 [INFO]:MX: No record found
+2024-12-24 20:29:25,233 [WARNING]:No NS record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,233 [INFO]:NS: No record found
+2024-12-24 20:29:25,244 [WARNING]:No TXT record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,244 [INFO]:TXT: No record found
+2024-12-24 20:29:25,250 [WARNING]:No SRV record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:29:25,251 [INFO]:SRV: No record found
+2024-12-24 20:29:25,255 [WARNING]:No A record found for domain lx.comisys.net
+2024-12-24 20:29:25,255 [INFO]:A: No record found
+2024-12-24 20:29:25,259 [WARNING]:No AAAA record found for domain lx.comisys.net
+2024-12-24 20:29:25,259 [INFO]:AAAA: No record found
+2024-12-24 20:29:25,263 [WARNING]:No CNAME record found for domain lx.comisys.net
+2024-12-24 20:29:25,264 [INFO]:CNAME: No record found
+2024-12-24 20:29:25,269 [DEBUG]:Retrieved 2 MX records for domain lx.comisys.net
+2024-12-24 20:29:25,291 [INFO]:MX: Inserted hzmx01.mxmail.netease.com.
+2024-12-24 20:29:25,321 [INFO]:MX: Inserted hzmx02.mxmail.netease.com.
+2024-12-24 20:29:25,328 [WARNING]:No NS record found for domain lx.comisys.net
+2024-12-24 20:29:25,328 [INFO]:NS: No record found
+2024-12-24 20:29:25,335 [DEBUG]:Retrieved 1 TXT records for domain lx.comisys.net
+2024-12-24 20:29:25,353 [INFO]:TXT: Inserted v=spf1 include:spf.163.com -all
+2024-12-24 20:29:25,357 [WARNING]:No SRV record found for domain lx.comisys.net
+2024-12-24 20:29:25,358 [INFO]:SRV: No record found
+2024-12-24 20:29:30,371 [WARNING]:Timeout while resolving A record for domain qns.lanxin.cn
+2024-12-24 20:29:30,372 [WARNING]:A: Timeout
+2024-12-24 20:29:35,386 [WARNING]:Timeout while resolving AAAA record for domain qns.lanxin.cn
+2024-12-24 20:29:35,387 [WARNING]:AAAA: Timeout
+2024-12-24 20:29:40,401 [WARNING]:Timeout while resolving CNAME record for domain qns.lanxin.cn
+2024-12-24 20:29:40,401 [WARNING]:CNAME: Timeout
+2024-12-24 20:29:45,410 [WARNING]:Timeout while resolving MX record for domain qns.lanxin.cn
+2024-12-24 20:29:45,411 [WARNING]:MX: Timeout
+2024-12-24 20:29:45,709 [DEBUG]:Retrieved 1 NS records for domain qns.lanxin.cn
+2024-12-24 20:29:45,721 [INFO]:NS: Inserted qns1.lanxin.cn.
+2024-12-24 20:29:50,736 [WARNING]:Timeout while resolving TXT record for domain qns.lanxin.cn
+2024-12-24 20:29:50,737 [WARNING]:TXT: Timeout
+2024-12-24 20:29:55,741 [WARNING]:Timeout while resolving SRV record for domain qns.lanxin.cn
+2024-12-24 20:29:55,742 [WARNING]:SRV: Timeout
+2024-12-24 20:31:09[INFO] Starting asset monitoring script
+2024-12-24 20:31:09[DEBUG] Retrieved 1 A records for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] A: Inserted 124.232.185.38
+2024-12-24 20:31:09[DEBUG] Retrieved 1 AAAA records for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] AAAA: Inserted 240e:c3:2002:5::e5
+2024-12-24 20:31:09[DEBUG] Retrieved 1 CNAME records for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] CNAME: Inserted fed37b6433c36e57.qaxanyu.com.
+2024-12-24 20:31:09[WARNING] No MX record found for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] MX: No record found
+2024-12-24 20:31:09[WARNING] No NS record found for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] NS: No record found
+2024-12-24 20:31:09[DEBUG] Retrieved 2 TXT records for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] TXT: Inserted globalsign-domain-verification=svqYZ-iNUjtJzVgwJEkhXCRGkuT66iVd0ADI6i8bq1
+2024-12-24 20:31:09[INFO] TXT: Inserted Vr0Nupj/sLBu7cKApv1Z5UpZlzdz0EV/K3WOgchacd4=
+2024-12-24 20:31:09[WARNING] No SRV record found for domain soft.qianxin.com
+2024-12-24 20:31:09[INFO] SRV: No record found
+2024-12-24 20:31:09[DEBUG] Retrieved 1 A records for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] A: Inserted 123.6.23.14
+2024-12-24 20:31:09[WARNING] No AAAA record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] AAAA: No record found
+2024-12-24 20:31:09[DEBUG] Retrieved 1 CNAME records for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] CNAME: Inserted ngfwup.sg.qianxincdn.com.
+2024-12-24 20:31:09[WARNING] No MX record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] MX: No record found
+2024-12-24 20:31:09[WARNING] No NS record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] NS: No record found
+2024-12-24 20:31:09[WARNING] No TXT record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] TXT: No record found
+2024-12-24 20:31:09[WARNING] No SRV record found for domain ngfwup.sg.qianxin.com
+2024-12-24 20:31:09[INFO] SRV: No record found
+2024-12-24 20:31:09[DEBUG] Retrieved 1 A records for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] A: Inserted 36.99.137.57
+2024-12-24 20:31:09[WARNING] No AAAA record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] AAAA: No record found
+2024-12-24 20:31:09[WARNING] No CNAME record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] CNAME: No record found
+2024-12-24 20:31:09[WARNING] No MX record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] MX: No record found
+2024-12-24 20:31:09[WARNING] No NS record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] NS: No record found
+2024-12-24 20:31:09[WARNING] No TXT record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] TXT: No record found
+2024-12-24 20:31:09[WARNING] No SRV record found for domain pre.vd.b.qianxincdn.com
+2024-12-24 20:31:09[INFO] SRV: No record found
+2024-12-24 20:31:09[WARNING] No A record found for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] A: No record found
+2024-12-24 20:31:09[WARNING] No AAAA record found for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] AAAA: No record found
+2024-12-24 20:31:09[WARNING] No CNAME record found for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] CNAME: No record found
+2024-12-24 20:31:09[DEBUG] Retrieved 2 MX records for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] MX: Inserted hzmx02.mxmail.netease.com.
+2024-12-24 20:31:09[INFO] MX: Inserted hzmx01.mxmail.netease.com.
+2024-12-24 20:31:09[WARNING] No NS record found for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] NS: No record found
+2024-12-24 20:31:09[DEBUG] Retrieved 1 TXT records for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] TXT: Inserted v=spf1 include:spf.163.com -all
+2024-12-24 20:31:09[WARNING] No SRV record found for domain lx.comisys.net
+2024-12-24 20:31:09[INFO] SRV: No record found
+2024-12-24 20:31:14[WARNING] Timeout while resolving A record for domain qns.lanxin.cn
+2024-12-24 20:31:14[WARNING] A: Timeout
+2024-12-24 20:31:19[WARNING] Timeout while resolving AAAA record for domain qns.lanxin.cn
+2024-12-24 20:31:19[WARNING] AAAA: Timeout
+2024-12-24 20:31:24[WARNING] Timeout while resolving CNAME record for domain qns.lanxin.cn
+2024-12-24 20:31:24[WARNING] CNAME: Timeout
+2024-12-24 20:31:29[WARNING] Timeout while resolving MX record for domain qns.lanxin.cn
+2024-12-24 20:31:29[WARNING] MX: Timeout
+2024-12-24 20:31:30[DEBUG] Retrieved 1 NS records for domain qns.lanxin.cn
+2024-12-24 20:31:30[INFO] NS: Inserted qns1.lanxin.cn.
+2024-12-24 20:31:35[WARNING] Timeout while resolving TXT record for domain qns.lanxin.cn
+2024-12-24 20:31:35[WARNING] TXT: Timeout
+2024-12-24 20:31:40[WARNING] Timeout while resolving SRV record for domain qns.lanxin.cn
+2024-12-24 20:31:40[WARNING] SRV: Timeout
