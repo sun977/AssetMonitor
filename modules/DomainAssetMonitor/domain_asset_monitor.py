@@ -3,10 +3,14 @@
 
 """
     auth: sunhaobo
-    version: v1.0
+    version: v2.0
     function: 获取SEC域名并解析入库
-    date: 2024.12.24
+    date: 2024.12.25
     note:
+        - 该模块主要负责以下操作：
+            1. 同步原始域名数据
+            2. 进行域名解析并入库
+            3. 记录操作完成时间
 """
 
 # 引用SEC接口
@@ -71,10 +75,10 @@ def insert_record(domain, record_type, record_info):
         logger.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
 
 
-# 从sec获取所有的主域名，生成列表
+# 从sec获取所有的主域名，生成列表【弃用】
 def get_domain_from_sec():
     """
-    从sec获取所有的主域名，生成列表
+    从sec获取所有的主域名，生成列表【弃用，改为从表中获取域名】
     :param:
     :return:['xxx','xxx']
     """
@@ -122,7 +126,6 @@ def get_all_domains_from_db():
         logger.error(f"Failed to get domains from asset_dns_origin: {e}")
         return []
 
-
 def get_records(domain, record_type):
     """
     Query the specified DNS records for a domain and return them as a list
@@ -163,7 +166,6 @@ def get_records(domain, record_type):
         logger.error(f"DNS exception while resolving {record_type} record for domain {domain}: {e}")
         return str(e)
 
-
 # 域名过滤白名单函数
 def filter_domains(domains):
     """
@@ -189,7 +191,6 @@ def filter_domains(domains):
     # 返回不在白名单里面的域名
     return [domain for domain in domains if domain not in whitelist]
 
-
 # 获取sec域名的域名解析并入库
 def get_sec_domain_records_insert_db():
     """
@@ -202,7 +203,7 @@ def get_sec_domain_records_insert_db():
 
     # 获取SEC所有域名
     # originAlldomains = get_domain_from_sec()
-    # 从域名表中获取域名信息【带补充】
+    # 从域名表中获取域名信息
     # originAlldomains = get_all_domains_from_db()
     # 从文件中读取域名 测试使用
     originAlldomains = read_domains_from_file('domains2.txt')
@@ -229,29 +230,36 @@ def get_sec_domain_records_insert_db():
                     insert_record(domain, record_type, record_info)
                     logger.info(f"{record_type}: Mysql Inserted {record_info['record_value']}")
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
-
+    return None
 
 # run运行函数
 def run():
     """
-    函数串联，执行总函数
-    :return:
+    函数串联，执行总函数。
+    该函数按顺序执行以下操作：
+    1. 同步原始域名数据
+    2. 进行域名解析并入库
+    3. 记录操作完成时间
     """
-    # 先运行原始域名数据同步操作
+    try:
+        logger.info("Starting asset monitoring script")
+        # 先运行原始域名数据同步操作
+        sync_domain_from_sec2db()
 
-    # 再运行域名解析入库操作
+        # 再运行域名解析入库操作
+        get_sec_domain_records_insert_db()
+        logger.info("Asset monitoring script completed")
+        # 运行周期1小时
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
 
-    logger.info("Starting asset monitoring script")
-    get_sec_domain_records_insert_db()
-    logger.info("Asset monitoring script completed")
-    # 运行了1小时
 
 
 if __name__ == '__main__':
-    # run()
+    run()
     # domains = ['example.com', 'example.net']
     # res = filter_domains(domains)
     # print("res:", res)
     # sync_domain_from_sec2db()
-    res = get_all_domains_from_db()
-    print("get_all_domains_from_db:", res)
+    # res = get_all_domains_from_db()
+    # print("get_all_domains_from_db:", res)

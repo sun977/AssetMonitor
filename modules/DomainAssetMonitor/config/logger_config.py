@@ -16,7 +16,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 
-def setup_logger():
+def setup_logger() -> logging.Logge:
     current_abs_path = os.path.abspath(__file__)
     current_abs_path_dir = os.path.dirname(current_abs_path)
     log_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../log/'

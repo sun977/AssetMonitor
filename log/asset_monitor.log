@@ -1,1 +1,18 @@
 2024-12-25 15:29:29[INFO] Retrieved 14926 domains from asset_dns_origin
+2024-12-25 15:32:04[INFO] Starting asset monitoring script
+2024-12-25 15:32:04[INFO] Retrieved 3 domains from database godv.asset_dns_white 
+2024-12-25 15:32:04[INFO] Retrieved 1 A records for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] A: Mysql Inserted 36.99.137.57
+2024-12-25 15:32:04[WARNING] No AAAA record found for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] AAAA: No record found
+2024-12-25 15:32:04[WARNING] No CNAME record found for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] CNAME: No record found
+2024-12-25 15:32:04[WARNING] No MX record found for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] MX: No record found
+2024-12-25 15:32:04[WARNING] No NS record found for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] NS: No record found
+2024-12-25 15:32:04[WARNING] No TXT record found for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] TXT: No record found
+2024-12-25 15:32:04[WARNING] No SRV record found for domain pre.vd.b.qianxincdn.com
+2024-12-25 15:32:04[INFO] SRV: No record found
+2024-12-25 15:32:04[INFO] Asset monitoring script completed
