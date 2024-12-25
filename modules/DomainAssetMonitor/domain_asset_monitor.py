@@ -242,13 +242,13 @@ def run():
     3. 记录操作完成时间
     """
     try:
-        logger.info("Starting asset monitoring script")
+        logger.info("Starting domain_asset_monitor.py script")
         # 先运行原始域名数据同步操作
         sync_domain_from_sec2db()
 
         # 再运行域名解析入库操作
         get_sec_domain_records_insert_db()
-        logger.info("Asset monitoring script completed")
+        logger.info("Domain_asset_monitor.py monitoring script completed")
         # 运行周期1小时
     except Exception as e:
         logger.error(f"An error occurred: {e}")
