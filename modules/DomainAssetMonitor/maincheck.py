@@ -125,7 +125,9 @@ def get_all_domains_from_db():
             return allDomainsList
         else:
             logging.warning(f"Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
-            return []
+    except Exception as e:
+        logging.error(f"Failed to get domains from asset_dns_origin: {e}")
+        return []
 
 
 def get_records(domain, record_type):
@@ -257,4 +259,6 @@ if __name__ == '__main__':
     # domains = ['example.com', 'example.net']
     # res = filter_domains(domains)
     # print("res:", res)
-    sync_domain_from_sec2db()
+    # sync_domain_from_sec2db()
+    res = get_all_domains_from_db()
+    print("get_all_domains_from_db:",res)
