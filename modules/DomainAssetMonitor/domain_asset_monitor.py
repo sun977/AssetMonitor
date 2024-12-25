@@ -203,10 +203,10 @@ def get_sec_domain_records_insert_db():
 
     # 获取SEC所有域名
     # originAlldomains = get_domain_from_sec()
-    # 从域名表中获取域名信息
-    # originAlldomains = get_all_domains_from_db()
+    # 从域名表 asset_dns_origin 中获取域名信息
+    originAlldomains = get_all_domains_from_db()
     # 从文件中读取域名 测试使用
-    originAlldomains = read_domains_from_file('domains2.txt')
+    # originAlldomains = read_domains_from_file('domains2.txt')
 
     # 增加域名过滤白名单的逻辑 返回 不在白名单中的域名列表 继续循环解析
     alldomains = filter_domains(originAlldomains)
