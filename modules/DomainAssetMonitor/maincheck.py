@@ -169,7 +169,7 @@ def filter_domains(domains):
             logging.warning('Database contains no whitelist data')
     else:  # 数据库sql执行失败
         logging.error(f"Failed to get whitelist from database: {res.get('msg')}")
-    print("whitelist:", whitelist)
+    # print("whitelist:", whitelist)
 
     # 返回不在白名单里面的域名
     return [domain for domain in domains if domain not in whitelist]
@@ -192,7 +192,7 @@ def get_sec_domain_records_insert_db():
 
     # 增加域名过滤白名单的逻辑 返回 不在白名单中的域名列表 继续循环解析
     alldomains = filter_domains(originAlldomains)
-    print(alldomains)
+    # print(alldomains)
 
     # 循环域名
     for domain in alldomains:
@@ -214,14 +214,13 @@ def get_sec_domain_records_insert_db():
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
 
 
-# run函数
+# run运行函数
 def run():
     """
     函数串联，执行总函数
     :return:
     """
     logging.info("Starting asset monitoring script")
-    # print(len(get_domain_from_sec()))
     get_sec_domain_records_insert_db()
     logging.info("Asset monitoring script completed")
     # 运行了1小时
