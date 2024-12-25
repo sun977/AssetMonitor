@@ -4,7 +4,7 @@
 """
     auth: sunhaobo
     version: v1.0
-    function:
+    function: 获取SEC域名并解析入库
     date: 2024.12.24
     note:
 """
@@ -18,8 +18,8 @@ from logging.handlers import RotatingFileHandler
 
 # 配置日志记录器
 logging.basicConfig(
-    # level=logging.DEBUG,  # 设置日志级别 详细信息
-    level=logging.INFO,  # 设置日志级别 确认程序按预期工作
+    level=logging.DEBUG,  # 设置日志级别 详细信息
+    # level=logging.INFO,  # 设置日志级别 确认程序按预期工作
     format='%(asctime)s[%(levelname)s] %(message)s',  # 设置日志格式
     datefmt='%Y-%m-%d %H:%M:%S',  # 设置日期格式
     handlers=[
@@ -41,7 +41,7 @@ def read_domains_from_file(file_path):
     return domains
 
 
-# 封装数据插入数据库
+# 封装数据插入数据库 -- asset_dns_records
 def insert_record(domain, record_type, record_info):
     """
     封装插入sql语句
@@ -79,6 +79,32 @@ def insert_record(domain, record_type, record_info):
         logging.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
 
 
+# 封装数据库插入函数 -- asset_dns_origin
+def insert_record_origin(domain, owner):
+    """
+
+    :param domain:
+    :param owner:
+    :return:
+    """
+    try:
+        sql = (
+                "INSERT INTO asset_dns_origin (domain, owner) "
+                "VALUES ('%s', '%s') "
+                "ON DUPLICATE KEY UPDATE "
+                "domain='%s',owner='%s', updateTime=CURRENT_TIMESTAMP(6);" % (
+                    domain, owner, domain, owner,
+                )
+        )
+
+        # 调用mysql插入函数
+        MySQL(sql=sql).exec()
+        return sql
+    except Exception as e:
+        logging.error(f"Failed to insert record for domain {domain}, owner {owner}: {e}")
+
+
+
 # 获取全量的域名信息【从中只挑主域名】
 def get_domain_from_sec():
     """
@@ -87,7 +113,32 @@ def get_domain_from_sec():
     :return:['xxx','xxx']
     """
     try:
+        sec = secApiClient()  # 实例化secClient
+        res = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
+        allMainDomainsList = []
+        if res is None:
+            # print('sec接口返回数据为空')
+            logging.warning('sec接口返回数据为空')
+            return allMainDomainsList
+        else:
+            for domain in res:
+                if domain.get('DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
+                    allMainDomainsList.append(domain.get('DomainName'))
+                    # 域名直接插入数据库
+        logging.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        return allMainDomainsList
+    except Exception as e:
+        logging.error(f"Failed to get domains from SEC: {e}")
+        return []
 
+# 获取全量域名去重入库asset_dns_origin
+def sync_domain_from_sec2db():
+    """
+    从sec获取所有的主域名，生成列表
+    :param:[{},{}]
+    :return:['xxx','xxx']
+    """
+    try:
         sec = secApiClient()  # 实例化secClient
         res = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
         allMainDomainsList = []
@@ -96,15 +147,27 @@ def get_domain_from_sec():
             logging.warning('sec接口返回数据为空')
             return allMainDomainsList
         else:
-            for domain in res:
-                if domain.get(
-                        'DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
-                    allMainDomainsList.append(domain.get('DomainName'))
+            for item in res:
+                if item.get('DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087
+                    # insert_record_origin(item.get('DomainName'), item.get('PrincipalName', ''))   # owner 对应 PrincipalName
+                    # logging.info(f"Inserted domain {item.get('DomainName')} into asset_dns_origin")
+                    allMainDomainsList.append({'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
+                    # 域名直接插入数据库
         logging.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        print("allMainDomainsList:", allMainDomainsList)
+
+        # 先获取所有域名，然后再插入数据库
+        for item in allMainDomainsList:
+            insert_record_origin(item.get('domain'), item.get('owner', ''))
+            logging.info(f"Mysql Inserted domain {item.get('domain')} into asset_dns_origin")
+        logging.info(f"Mysql Inserted {len(allMainDomainsList)} unique domains into asset_dns_origin success")
+
         return allMainDomainsList
     except Exception as e:
         logging.error(f"Failed to get domains from SEC: {e}")
         return []
+
+
 
 
 # 获取域名解析函数
@@ -187,6 +250,8 @@ def get_sec_domain_records_insert_db():
 
     # 获取SEC所有域名
     # originAlldomains = get_domain_from_sec()
+    # 从域名表中获取域名信息【带补充】
+    # originAlldomains = get_all_domains_from_db()
     # 从文件中读取域名 测试使用
     originAlldomains = read_domains_from_file('domains2.txt')
 
@@ -227,7 +292,8 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    # run()
     # domains = ['example.com', 'example.net']
     # res = filter_domains(domains)
     # print("res:", res)
+    sync_domain_from_sec2db()
