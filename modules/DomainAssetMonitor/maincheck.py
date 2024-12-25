@@ -15,6 +15,7 @@ import dns.resolver
 from comm.mysql import *
 import logging
 from logging.handlers import RotatingFileHandler
+from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_sec_data2db
 
 # 配置日志记录器
 logging.basicConfig(
@@ -78,34 +79,6 @@ def insert_record(domain, record_type, record_info):
     except Exception as e:
         logging.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
 
-
-# 封装数据库插入函数 -- asset_dns_origin
-def insert_record_origin(domain, owner):
-    """
-
-    :param domain:
-    :param owner:
-    :return:
-    """
-    try:
-        sql = (
-                "INSERT INTO asset_dns_origin (domain, owner) "
-                "VALUES ('%s', '%s') "
-                "ON DUPLICATE KEY UPDATE "
-                "domain='%s',owner='%s', updateTime=CURRENT_TIMESTAMP(6);" % (
-                    domain, owner, domain, owner,
-                )
-        )
-
-        # 调用mysql插入函数
-        MySQL(sql=sql).exec()
-        return sql
-    except Exception as e:
-        logging.error(f"Failed to insert record for domain {domain}, owner {owner}: {e}")
-
-
-
-# 获取全量的域名信息【从中只挑主域名】
 def get_domain_from_sec():
     """
     从sec获取所有的主域名，生成列表
@@ -131,46 +104,6 @@ def get_domain_from_sec():
         logging.error(f"Failed to get domains from SEC: {e}")
         return []
 
-# 获取全量域名去重入库asset_dns_origin
-def sync_domain_from_sec2db():
-    """
-    从sec获取所有的主域名，生成列表
-    :param:[{},{}]
-    :return:['xxx','xxx']
-    """
-    try:
-        sec = secApiClient()  # 实例化secClient
-        res = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
-        allMainDomainsList = []
-        if res is None:
-            print('sec接口返回数据为空')
-            logging.warning('sec接口返回数据为空')
-            return allMainDomainsList
-        else:
-            for item in res:
-                if item.get('DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087
-                    # insert_record_origin(item.get('DomainName'), item.get('PrincipalName', ''))   # owner 对应 PrincipalName
-                    # logging.info(f"Inserted domain {item.get('DomainName')} into asset_dns_origin")
-                    allMainDomainsList.append({'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
-                    # 域名直接插入数据库
-        logging.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
-        print("allMainDomainsList:", allMainDomainsList)
-
-        # 先获取所有域名，然后再插入数据库
-        for item in allMainDomainsList:
-            insert_record_origin(item.get('domain'), item.get('owner', ''))
-            logging.info(f"Mysql Inserted domain {item.get('domain')} into asset_dns_origin")
-        logging.info(f"Mysql Inserted {len(allMainDomainsList)} unique domains into asset_dns_origin success")
-
-        return allMainDomainsList
-    except Exception as e:
-        logging.error(f"Failed to get domains from SEC: {e}")
-        return []
-
-
-
-
-# 获取域名解析函数
 def get_records(domain, record_type):
     """
     Query the specified DNS records for a domain and return them as a list
