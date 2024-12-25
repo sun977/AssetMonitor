@@ -13,26 +13,17 @@
 from modules.SecAPI.sec.getSecApiClient import *
 import dns.resolver
 from comm.mysql import *
-import logging
-from logging.handlers import RotatingFileHandler
+from modules.DomainAssetMonitor.config.logger_config import *   # 引入日志配置
+import os
 from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db
 
-# 配置日志记录器
-logging.basicConfig(
-    level=logging.DEBUG,  # 设置日志级别 详细信息
-    # level=logging.INFO,  # 设置日志级别 确认程序按预期工作
-    format='%(asctime)s[%(levelname)s] %(message)s',  # 设置日志格式
-    datefmt='%Y-%m-%d %H:%M:%S',  # 设置日期格式
-    handlers=[
-        RotatingFileHandler(
-            "../../log/asset_monitor.log",  # 将日志写入文件
-            maxBytes=20 * 1024 * 1024,  # 最大文件大小为 20MB
-            backupCount=5  # 最多保留 5 个备份文件
-        ),
-        logging.StreamHandler()  # 同时输出到控制台
-    ]
-)
+current_abs_path = os.path.abspath(__file__)  # 当前文件位置
+current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
+log_dir_path = os.path.abspath(current_abs_path_dir) + '../../../log/'  # 从当前目录找到日志目录的位置
 
+
+# 配置日志记录器
+logger = setup_logger()
 
 # 从文件中读取域名
 def read_domains_from_file(file_path):
@@ -77,7 +68,8 @@ def insert_record(domain, record_type, record_info):
         MySQL(sql=sql).exec()
         return sql
     except Exception as e:
-        logging.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
+        logger.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
+
 
 # 从sec获取所有的主域名，生成列表
 def get_domain_from_sec():
@@ -92,17 +84,18 @@ def get_domain_from_sec():
         allMainDomainsList = []
         if res is None:
             # print('sec接口返回数据为空')
-            logging.warning('sec接口返回数据为空')
+            logger.warning('sec接口返回数据为空')
             return allMainDomainsList
         else:
             for domain in res:
-                if domain.get('DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
+                if domain.get(
+                        'DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
                     allMainDomainsList.append(domain.get('DomainName'))
                     # 域名直接插入数据库
-        logging.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
         return allMainDomainsList
     except Exception as e:
-        logging.error(f"Failed to get domains from SEC: {e}")
+        logger.error(f"Failed to get domains from SEC: {e}")
         return []
 
 
@@ -114,19 +107,19 @@ def get_all_domains_from_db():
     """
     try:
         sql = (
-                "SELECT domain FROM asset_dns_origin"   # 获取原始表中所有域名数据
+            "SELECT domain FROM asset_dns_origin"  # 获取原始表中所有域名数据
         )
         resOrigindomains = MySQL(sql=sql).exec()
         allDomainsList = []
         if resOrigindomains.get('state') == 1:
             for item in resOrigindomains.get('data'):
                 allDomainsList.append(item.get('domain'))
-            logging.info(f"Retrieved {len(allDomainsList)} domains from asset_dns_origin")
+            logger.info(f"Retrieved {len(allDomainsList)} domains from asset_dns_origin")
             return allDomainsList
         else:
-            logging.warning(f"Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
+            logger.warning(f"Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
     except Exception as e:
-        logging.error(f"Failed to get domains from asset_dns_origin: {e}")
+        logger.error(f"Failed to get domains from asset_dns_origin: {e}")
         return []
 
 
@@ -158,16 +151,16 @@ def get_records(domain, record_type):
         else:
             records = [{'record_value': answer.to_text()[:2048]} for answer in answers]  # 截断过长的记录值
 
-        logging.info(f"Retrieved {len(records)} {record_type} records for domain {domain}")
+        logger.info(f"Retrieved {len(records)} {record_type} records for domain {domain}")
         return records
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
-        logging.warning(f"No {record_type} record found for domain {domain}")
+        logger.warning(f"No {record_type} record found for domain {domain}")
         return None
     except dns.resolver.Timeout:
-        logging.warning(f"Timeout while resolving {record_type} record for domain {domain}")
+        logger.warning(f"Timeout while resolving {record_type} record for domain {domain}")
         return "Timeout"
     except dns.exception.DNSException as e:
-        logging.error(f"DNS exception while resolving {record_type} record for domain {domain}: {e}")
+        logger.error(f"DNS exception while resolving {record_type} record for domain {domain}: {e}")
         return str(e)
 
 
@@ -186,11 +179,11 @@ def filter_domains(domains):
     if res.get('state') == 1:  # 数据库sql执行成功
         if res.get('data') is not None:  # 数据库存在数据
             whitelist = [item['domain'] for item in res.get('data')]
-            logging.info(f"Retrieved {len(whitelist)} domains from database godv.asset_dns_white ")
+            logger.info(f"Retrieved {len(whitelist)} domains from database godv.asset_dns_white ")
         else:  # 数据库不存在数据
-            logging.warning('Database contains no whitelist data')
+            logger.warning('Database contains no whitelist data')
     else:  # 数据库sql执行失败
-        logging.error(f"Failed to get whitelist from database: {res.get('msg')}")
+        logger.error(f"Failed to get whitelist from database: {res.get('msg')}")
     # print("whitelist:", whitelist)
 
     # 返回不在白名单里面的域名
@@ -225,16 +218,16 @@ def get_sec_domain_records_insert_db():
         for record_type in record_types:
             records = get_records(domain, record_type)
             if records is None:  # 记录为空
-                logging.info(f"{record_type}: No record found")
+                logger.info(f"{record_type}: No record found")
                 # print(f"{record_type}: No record found")
             elif isinstance(records, str):  # 返回为字符串,说明报错了
-                logging.warning(f"A error for resolving {record_type} record: {records}")
+                logger.warning(f"A error for resolving {record_type} record: {records}")
                 # print(f"{record_type}: {records}")
             else:  # 说明有记录，进入循环插入
                 # print(f"{record_type}: {records}")
                 for record_info in records:  #
                     insert_record(domain, record_type, record_info)
-                    logging.info(f"{record_type}: Mysql Inserted {record_info['record_value']}")
+                    logger.info(f"{record_type}: Mysql Inserted {record_info['record_value']}")
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
 
 
@@ -248,9 +241,9 @@ def run():
 
     # 再运行域名解析入库操作
 
-    logging.info("Starting asset monitoring script")
+    logger.info("Starting asset monitoring script")
     get_sec_domain_records_insert_db()
-    logging.info("Asset monitoring script completed")
+    logger.info("Asset monitoring script completed")
     # 运行了1小时
 
 
@@ -261,4 +254,4 @@ if __name__ == '__main__':
     # print("res:", res)
     # sync_domain_from_sec2db()
     res = get_all_domains_from_db()
-    print("get_all_domains_from_db:",res)
+    print("get_all_domains_from_db:", res)
