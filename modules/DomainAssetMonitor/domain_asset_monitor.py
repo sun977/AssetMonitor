@@ -11,13 +11,17 @@
             1. 同步原始域名数据
             2. 进行域名解析并入库
             3. 记录操作完成时间
+            4. 后续将各个模块的任务抽象出来到目录外
+        - 执行频率
+            1. 每天执行一次
+            2. 执行方式，计划任务：0  5  *  *  *  nohup python3 AssetMonitor/modules/DomainAssetMonitor/domain_asset_monitor.py
 """
 
 # 引用SEC接口
 from modules.SecAPI.sec.getSecApiClient import *
 import dns.resolver
 from comm.mysql import *
-from modules.DomainAssetMonitor.config.logger_config import *   # 引入日志配置
+from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
 import os
 from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db
 
@@ -25,9 +29,9 @@ current_abs_path = os.path.abspath(__file__)  # 当前文件位置
 current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
 log_dir_path = os.path.abspath(current_abs_path_dir) + '../../../log/'  # 从当前目录找到日志目录的位置
 
-
 # 配置日志记录器
 logger = setup_logger()
+
 
 # 从文件中读取域名
 def read_domains_from_file(file_path):
@@ -126,6 +130,7 @@ def get_all_domains_from_db():
         logger.error(f"Failed to get domains from asset_dns_origin: {e}")
         return []
 
+
 def get_records(domain, record_type):
     """
     Query the specified DNS records for a domain and return them as a list
@@ -166,6 +171,7 @@ def get_records(domain, record_type):
         logger.error(f"DNS exception while resolving {record_type} record for domain {domain}: {e}")
         return str(e)
 
+
 # 域名过滤白名单函数
 def filter_domains(domains):
     """
@@ -190,6 +196,7 @@ def filter_domains(domains):
 
     # 返回不在白名单里面的域名
     return [domain for domain in domains if domain not in whitelist]
+
 
 # 获取sec域名的域名解析并入库
 def get_sec_domain_records_insert_db():
@@ -232,8 +239,9 @@ def get_sec_domain_records_insert_db():
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
     return None
 
+
 # run运行函数
-def run():
+def run_domain_asset_monitor():
     """
     函数串联，执行总函数。
     该函数按顺序执行以下操作：
@@ -254,9 +262,8 @@ def run():
         logger.error(f"An error occurred: {e}")
 
 
-
 if __name__ == '__main__':
-    run()
+    run_domain_asset_monitor()
     # domains = ['example.com', 'example.net']
     # res = filter_domains(domains)
     # print("res:", res)
