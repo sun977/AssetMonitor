@@ -14,7 +14,7 @@
             4. 后续将各个模块的任务抽象出来到目录外
         - 执行频率
             1. 每天执行一次
-            2. 执行方式，计划任务：0  5  *  *  *  nohup python3 AssetMonitor/modules/DomainAssetMonitor/domain_asset_monitor.py
+            2. 执行方式，计划任务：0  5  *  *  *  nohup python3 AssetMonitor/modules/DomainAssetMonitor/domain_asset_analysis.py
 """
 
 # 引用SEC接口
@@ -241,7 +241,7 @@ def get_sec_domain_records_insert_db():
 
 
 # run运行函数
-def run_domain_asset_monitor():
+def run_domain_asset_analysis():
     """
     函数串联，执行总函数。
     该函数按顺序执行以下操作：
@@ -250,7 +250,7 @@ def run_domain_asset_monitor():
     3. 记录操作完成时间
     """
     try:
-        logger.info("Starting domain_asset_monitor.py script")
+        logger.info("Starting domain_asset_analysis.py script")
         # 先运行原始域名数据同步操作
         sync_domain_from_sec2db()
 
@@ -263,7 +263,7 @@ def run_domain_asset_monitor():
 
 
 if __name__ == '__main__':
-    run_domain_asset_monitor()
+    run_domain_asset_analysis()
     # domains = ['example.com', 'example.net']
     # res = filter_domains(domains)
     # print("res:", res)
