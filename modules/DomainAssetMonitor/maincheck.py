@@ -15,7 +15,7 @@ import dns.resolver
 from comm.mysql import *
 import logging
 from logging.handlers import RotatingFileHandler
-from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_sec_data2db
+from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db
 
 # 配置日志记录器
 logging.basicConfig(
@@ -79,6 +79,7 @@ def insert_record(domain, record_type, record_info):
     except Exception as e:
         logging.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
 
+# 从sec获取所有的主域名，生成列表
 def get_domain_from_sec():
     """
     从sec获取所有的主域名，生成列表
@@ -103,6 +104,29 @@ def get_domain_from_sec():
     except Exception as e:
         logging.error(f"Failed to get domains from SEC: {e}")
         return []
+
+
+# 从数据表 asset_dns_origin 获取所有域名，生成列表
+def get_all_domains_from_db():
+    """
+    从 asset_dns_origin 表中获取需要解析的域名列表
+    :return:
+    """
+    try:
+        sql = (
+                "SELECT domain FROM asset_dns_origin"   # 获取原始表中所有域名数据
+        )
+        resOrigindomains = MySQL(sql=sql).exec()
+        allDomainsList = []
+        if resOrigindomains.get('state') == 1:
+            for item in resOrigindomains.get('data'):
+                allDomainsList.append(item.get('domain'))
+            logging.info(f"Retrieved {len(allDomainsList)} domains from asset_dns_origin")
+            return allDomainsList
+        else:
+            logging.warning(f"Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
+            return []
+
 
 def get_records(domain, record_type):
     """
@@ -218,6 +242,10 @@ def run():
     函数串联，执行总函数
     :return:
     """
+    # 先运行原始域名数据同步操作
+
+    # 再运行域名解析入库操作
+
     logging.info("Starting asset monitoring script")
     get_sec_domain_records_insert_db()
     logging.info("Asset monitoring script completed")

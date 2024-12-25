@@ -22,7 +22,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',  # 设置日期格式
     handlers=[
         RotatingFileHandler(
-            "../../log/asset_monitor.log",  # 将日志写入文件
+            "../../../log/asset_monitor.log",  # 将日志写入文件   目录多了一级 sync 改成了 '../../../log/asset_monitor.log'
             maxBytes=20 * 1024 * 1024,  # 最大文件大小为 20MB
             backupCount=5  # 最多保留 5 个备份文件
         ),
@@ -79,7 +79,7 @@ def sync_domain_from_sec2db():
                         {'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
                     # 域名直接插入数据库
         logging.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
-        print("allMainDomainsList:", allMainDomainsList)
+        # print("allMainDomainsList:", allMainDomainsList)
 
         # 先获取所有域名，然后再插入数据库
         for item in allMainDomainsList:
