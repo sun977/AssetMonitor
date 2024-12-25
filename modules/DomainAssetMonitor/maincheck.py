@@ -25,18 +25,21 @@ logging.basicConfig(
     handlers=[
         RotatingFileHandler(
             "../../log/asset_monitor.log",  # 将日志写入文件
-            maxBytes=20*1024*1024,  # 最大文件大小为 20MB
+            maxBytes=20 * 1024 * 1024,  # 最大文件大小为 20MB
             backupCount=5  # 最多保留 5 个备份文件
         ),
         logging.StreamHandler()  # 同时输出到控制台
     ]
 )
+
+
 # 从文件中读取域名
 def read_domains_from_file(file_path):
     """Read domains from a file and return them as a list."""
     with open(file_path, 'r') as file:
         domains = [line.strip() for line in file if line.strip()]
     return domains
+
 
 # 封装数据插入数据库
 def insert_record(domain, record_type, record_info):
@@ -55,7 +58,8 @@ def insert_record(domain, record_type, record_info):
                 "ON DUPLICATE KEY UPDATE "
                 "recordValue='%s', priority='%s', weight='%s', port='%s', target='%s', updateTime=CURRENT_TIMESTAMP(6);" % (
                     domain, record_type, record_info.get('record_value', ''),
-                    record_info.get('priority', ''),  # 字段类型是int，所以默认为0，不然mysql汇报错 【1366, "Incorrect integer value: '' for column 'priority' at row 1"】 -- 改成 vachar
+                    record_info.get('priority', ''),
+                    # 字段类型是int，所以默认为0，不然mysql汇报错 【1366, "Incorrect integer value: '' for column 'priority' at row 1"】 -- 改成 vachar
                     record_info.get('weight', ''),
                     record_info.get('port', ''),
                     record_info.get('target', ''),
@@ -93,7 +97,8 @@ def get_domain_from_sec():
             return allMainDomainsList
         else:
             for domain in res:
-                if domain.get('DomainName') not in allMainDomainsList:   # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
+                if domain.get(
+                        'DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
                     allMainDomainsList.append(domain.get('DomainName'))
         logging.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
         return allMainDomainsList
@@ -144,8 +149,34 @@ def get_records(domain, record_type):
         return str(e)
 
 
-# 获取sec域名的域名解析
-def get_sec_domain_records():
+# 域名过滤白名单函数
+def filter_domains(domains):
+    """
+    过滤域名白名单，不支持通配符类型的域名
+    减少查询次数，查一次表把白名单都都取出来
+    返回域名列表 = 所有域名 - 白名单域名
+    :param domains: 需要过白名单的域名列表
+    :return:['','']
+    """
+    # whitelist = ['example.com', 'example.net']
+    sql_whitelist = "SELECT domain FROM asset_dns_white"  # 数据库中获取白名单
+    res = MySQL(sql=sql_whitelist).exec()
+    if res.get('state') == 1:  # 数据库sql执行成功
+        if res.get('data') is not None:  # 数据库存在数据
+            whitelist = [item['domain'] for item in res.get('data')]
+            logging.info(f"Retrieved {len(whitelist)} domains from database godv.asset_dns_white ")
+        else:  # 数据库不存在数据
+            logging.warning('Database contains no whitelist data')
+    else:  # 数据库sql执行失败
+        logging.error(f"Failed to get whitelist from database: {res.get('msg')}")
+    print("whitelist:", whitelist)
+
+    # 返回不在白名单里面的域名
+    return [domain for domain in domains if domain not in whitelist]
+
+
+# 获取sec域名的域名解析并入库
+def get_sec_domain_records_insert_db():
     """
     获取sec域名的域名解析
     :param:
@@ -155,10 +186,13 @@ def get_sec_domain_records():
     record_types = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SRV']
 
     # 获取SEC所有域名
-    alldomains = get_domain_from_sec()
-    # 从文件中读取域名
-    # alldomains = read_domains_from_file('domains.txt')
+    # originAlldomains = get_domain_from_sec()
+    # 从文件中读取域名 测试使用
+    originAlldomains = read_domains_from_file('domains2.txt')
 
+    # 增加域名过滤白名单的逻辑 返回 不在白名单中的域名列表 继续循环解析
+    alldomains = filter_domains(originAlldomains)
+    print(alldomains)
 
     # 循环域名
     for domain in alldomains:
@@ -166,24 +200,35 @@ def get_sec_domain_records():
         # 循环解析类型
         for record_type in record_types:
             records = get_records(domain, record_type)
-            if records is None:   # 记录为空
+            if records is None:  # 记录为空
                 logging.info(f"{record_type}: No record found")
                 # print(f"{record_type}: No record found")
-            elif isinstance(records, str):   # 返回为字符串,说明报错了
+            elif isinstance(records, str):  # 返回为字符串,说明报错了
                 logging.warning(f"A error for resolving {record_type} record: {records}")
                 # print(f"{record_type}: {records}")
             else:  # 说明有记录，进入循环插入
                 # print(f"{record_type}: {records}")
-                for record_info in records:    #
+                for record_info in records:  #
                     insert_record(domain, record_type, record_info)
                     logging.info(f"{record_type}: Mysql Inserted {record_info['record_value']}")
                     # print(f"{record_type}: Inserted {record_info['record_value']}")
 
 
-
-if __name__ == '__main__':
+# run函数
+def run():
+    """
+    函数串联，执行总函数
+    :return:
+    """
     logging.info("Starting asset monitoring script")
     # print(len(get_domain_from_sec()))
-    get_sec_domain_records()
+    get_sec_domain_records_insert_db()
     logging.info("Asset monitoring script completed")
     # 运行了1小时
+
+
+if __name__ == '__main__':
+    run()
+    # domains = ['example.com', 'example.net']
+    # res = filter_domains(domains)
+    # print("res:", res)
