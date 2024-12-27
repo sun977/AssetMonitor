@@ -229,7 +229,7 @@ def get_sec_domain_records_insert_db():
                 logger.info(f"{record_type}: No record found")
                 # print(f"{record_type}: No record found")
             elif isinstance(records, str):  # 返回为字符串,说明报错了
-                logger.warning(f"A error for resolving {record_type} record: {records}")
+                logger.warning(f"An error for resolving {record_type} record: {records}")
                 # print(f"{record_type}: {records}")
             else:  # 说明有记录，进入循环插入
                 # print(f"{record_type}: {records}")
