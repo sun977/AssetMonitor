@@ -20,4 +20,5 @@
 from modules.DomainAssetMonitor.domain_asset_analysis import run_domain_asset_analysis
 
 if __name__ == '__main__':
+    # 运行域名资产分析监控
     run_domain_asset_analysis()
