@@ -11,10 +11,38 @@
 
 from modules.SecAPI.sec.getSecApiClient import *
 from comm.mysql import *
-from modules.DomainAssetMonitor.config.logger_config import *   # 引入日志配置
+from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
 
 # 配置日志记录器
 logger = setup_logger()
+
+# 从sec平台获取所有的主域名，生成列表
+def get_domain_from_sec():
+    """
+    从sec获取所有的主域名，生成列表【弃用，改为从表中获取域名】
+    :param:
+    :return:['xxx','xxx']
+    """
+    allMainDomainsList = []
+    try:
+        sec = secApiClient()  # 实例化secClient
+        res = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
+        # allMainDomainsList = []
+        if res is None:
+            # print('sec接口返回数据为空')
+            logger.warning('sec接口返回数据为空')
+            return allMainDomainsList
+        else:
+            for domain in res:
+                if domain.get('DomainName') not in allMainDomainsList:
+                    # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
+                    allMainDomainsList.append(domain.get('DomainName'))
+        logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        return allMainDomainsList
+    except Exception as e:
+        logger.error(f"Failed to get domains from SEC: {e}")
+        return allMainDomainsList
+
 
 # 封装数据库插入函数 -- asset_dns_origin
 def insert_record_origin(domain, owner):
@@ -41,6 +69,7 @@ def insert_record_origin(domain, owner):
         logger.error(f"Failed to insert record for domain {domain}, owner {owner}: {e}")
 
 
+# 同步SEC接口数据和原始域名表数据
 def sync_domain_from_sec2db():
     """
     从sec获取所有的主域名，生成列表

@@ -23,11 +23,11 @@ import dns.resolver
 from comm.mysql import *
 from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
 import os
-from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db
+from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db, get_domain_from_sec
 
-current_abs_path = os.path.abspath(__file__)  # 当前文件位置
-current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
-log_dir_path = os.path.abspath(current_abs_path_dir) + '../../../log/'  # 从当前目录找到日志目录的位置
+# current_abs_path = os.path.abspath(__file__)  # 当前文件位置
+# current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
+# log_dir_path = os.path.abspath(current_abs_path_dir) + '../../../log/'  # 从当前目录找到日志目录的位置
 
 # 配置日志记录器
 logger = setup_logger()
@@ -77,34 +77,6 @@ def insert_record(domain, record_type, record_info):
         return sql
     except Exception as e:
         logger.error(f"Failed to insert record for domain {domain}, record_type {record_type}: {e}")
-
-
-# 从sec获取所有的主域名，生成列表【弃用】
-def get_domain_from_sec():
-    """
-    从sec获取所有的主域名，生成列表【弃用，改为从表中获取域名】
-    :param:
-    :return:['xxx','xxx']
-    """
-    try:
-        sec = secApiClient()  # 实例化secClient
-        res = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
-        allMainDomainsList = []
-        if res is None:
-            # print('sec接口返回数据为空')
-            logger.warning('sec接口返回数据为空')
-            return allMainDomainsList
-        else:
-            for domain in res:
-                if domain.get(
-                        'DomainName') not in allMainDomainsList:  # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
-                    allMainDomainsList.append(domain.get('DomainName'))
-                    # 域名直接插入数据库
-        logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
-        return allMainDomainsList
-    except Exception as e:
-        logger.error(f"Failed to get domains from SEC: {e}")
-        return []
 
 
 # 从数据表 asset_dns_origin 获取所有域名，生成列表

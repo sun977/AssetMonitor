@@ -12,5 +12,19 @@
             - 域名检查加白 --- asset_dns_white 表 数据在 asset_dns 中字段置1 isWhite=1
             - 域名失效 --- asset_dns_origin 存在 但是 没有解析
             - 域名IP为CDN --- 判断IP是 cdn IP
+        3. 原始域名表删除 7 天前的数据
+        4. 域名解析表删除 7 天之前没有解析的域名
 """
+
+from modules.SecAPI.sec.getSecApiClient import *
+import dns.resolver
+from comm.mysql import *
+from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
+
+
+# 配置日志记录器
+logger = setup_logger()
+
+
+# 分析新增域名
 
