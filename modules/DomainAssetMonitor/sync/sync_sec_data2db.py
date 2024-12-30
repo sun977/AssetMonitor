@@ -16,6 +16,7 @@ from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配
 # 配置日志记录器
 logger = setup_logger()
 
+
 # 从sec平台获取所有的主域名，生成列表
 def get_domain_from_sec():
     """
