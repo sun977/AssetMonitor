@@ -79,6 +79,47 @@ def new_add_domains():
 
     return newAddDomains
 
+# 失效域名检测
+def check_invalid_domains():
+    """
+    检查 asset_dns_origin 表中失效域名
+    落表 asset_dns
+    :param:
+    :return:
+    """
+    pass
+
+# 加白域名检测
+def check_white_domains():
+    """
+    检查 asset_dns_white 表中加白域名
+    落表 asset_dns
+    :param:
+    :return:
+    """
+    pass
+
+# 解析ip为cdn的域名检测
+def check_ip_or_domain_isCdn():
+    """
+    检查 asset_dns_record 表中解析A记录ip为 CDN IP
+    检查 asset_dns_origin 表中域名为CDN域名
+    落表 asset_dns
+    :param:
+    :return:
+    """
+    pass
+
+# 删除过期数据
+def delete_expired_data():
+    """
+    删除 asset_dns_origin 表中 7 天前的数据
+    删除 asset_dns_record 表中 7 天之前没有解析的域名
+    :param:
+    :return:
+    """
+    pass
+
 
 if __name__ == '__main__':
     res = new_add_domains()
