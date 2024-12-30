@@ -37,7 +37,7 @@ def get_domain_from_sec():
                 if item.get('DomainName') not in allMainDomainsList:   # 去重
                     # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
                     allMainDomainsList.append({'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
-        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.get_domain_from_sec() Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.get_domain_from_sec() Retrieved {len(allMainDomainsList)} domains from SEC")
         return allMainDomainsList
     except Exception as e:
         logger.error(f"modules.DomainAssetMonitor.sync_sec_data2db.get_domain_from_sec() Failed to get domains from SEC: {e}")
@@ -92,7 +92,7 @@ def sync_domain_from_sec2db():
                     allMainDomainsList.append(
                         {'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
                     # 域名直接插入数据库
-        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.sync_domain_from_sec2db() Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.sync_domain_from_sec2db() Retrieved {len(allMainDomainsList)} domains from SEC")
 
         # 先获取所有域名，然后再插入数据库a
         for item in allMainDomainsList:
