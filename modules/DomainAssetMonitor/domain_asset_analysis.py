@@ -85,22 +85,23 @@ def get_all_domains_from_db():
     从 asset_dns_origin 表中获取需要解析的域名列表
     :return:
     """
+    allDomainsList = []
     try:
         sql = (
             "SELECT domain FROM asset_dns_origin"  # 获取原始表中所有域名数据
         )
         resOrigindomains = MySQL(sql=sql).exec()
-        allDomainsList = []
+        # allDomainsList = []
         if resOrigindomains.get('state') == 1:
             for item in resOrigindomains.get('data'):
                 allDomainsList.append(item.get('domain'))
-            logger.info(f"Retrieved {len(allDomainsList)} domains from asset_dns_origin")
+            logger.info(f"modules.DomainAssetMonitor.domain_asset_check.get_domain_from_db() Retrieved {len(allDomainsList)} domains from asset_dns_origin")
             return allDomainsList
         else:
-            logger.warning(f"Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
+            logger.warning(f"modules.DomainAssetMonitor.domain_asset_check.get_domain_from_db() Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
     except Exception as e:
-        logger.error(f"Failed to get domains from asset_dns_origin: {e}")
-        return []
+        logger.error(f"modules.DomainAssetMonitor.domain_asset_check.get_domain_from_db() Failed to get domains from asset_dns_origin: {e}")
+        return allDomainsList
 
 
 def get_records(domain, record_type):

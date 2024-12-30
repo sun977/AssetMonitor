@@ -28,7 +28,7 @@ def get_domain_from_sec():
     try:
         sec = secApiClient()  # 实例化secClient
         data = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
-        if res is None:
+        if data is None:
             # print('sec接口返回数据为空')
             logger.warning('sec接口返回数据为空')
             return allMainDomainsList
@@ -37,10 +37,10 @@ def get_domain_from_sec():
                 if item.get('DomainName') not in allMainDomainsList:   # 去重
                     # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
                     allMainDomainsList.append({'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
-        logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
+        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.get_domain_from_sec() Retrieved {len(allMainDomainsList)} unique domains from SEC")
         return allMainDomainsList
     except Exception as e:
-        logger.error(f"Failed to get domains from SEC: {e}")
+        logger.error(f"modules.DomainAssetMonitor.sync_sec_data2db.get_domain_from_sec() Failed to get domains from SEC: {e}")
         return allMainDomainsList
 
 
@@ -66,7 +66,7 @@ def insert_record_origin(domain, owner):
         MySQL(sql=sql).exec()
         return sql
     except Exception as e:
-        logger.error(f"Failed to insert record for domain {domain}, owner {owner}: {e}")
+        logger.error(f"modules.DomainAssetMonitor.sync_sec_data2db.insert_record_origin() Failed to insert record for domain {domain}, owner {owner}: {e}")
 
 
 # 同步SEC接口数据和原始域名表数据
@@ -92,18 +92,17 @@ def sync_domain_from_sec2db():
                     allMainDomainsList.append(
                         {'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
                     # 域名直接插入数据库
-        logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
-        # print("allMainDomainsList:", allMainDomainsList)
+        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.sync_domain_from_sec2db() Retrieved {len(allMainDomainsList)} unique domains from SEC")
 
         # 先获取所有域名，然后再插入数据库a
         for item in allMainDomainsList:
             insert_record_origin(item.get('domain'), item.get('owner', ''))
-            logger.info(f"Mysql Inserted domain {item.get('domain')} into asset_dns_origin")
-        logger.info(f"Mysql Inserted {len(allMainDomainsList)} unique domains into asset_dns_origin success")
+            logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.sync_domain_from_sec2db() Mysql Inserted domain {item.get('domain')} into asset_dns_origin")
+        logger.info(f"modules.DomainAssetMonitor.sync_sec_data2db.sync_domain_from_sec2db() Mysql Inserted {len(allMainDomainsList)} unique domains into asset_dns_origin success")
 
         return allMainDomainsList
     except Exception as e:
-        logger.error(f"Failed to get domains from SEC: {e}")
+        logger.error(f"modules.DomainAssetMonitor.sync_sec_data2db.sync_domain_from_sec2db() Failed to get domains from SEC: {e}")
         return []
 
 
