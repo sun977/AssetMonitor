@@ -67,7 +67,7 @@ class SQL(object):
             # pymysql.cursors.DictCursor 以字典的形式返回结果
             return self.cursor
         except Exception as error:
-            print(self.time, 'public.mysql.SQL.__enter__ have error: %s' % error)
+            print(self.time, 'comm.mysql.SQL.__enter__ have error: %s' % error)
             traceback.print_exc()
             # raise error
             """
@@ -132,7 +132,7 @@ class MySQL:
                     'msg': 'insert many data successfully'
                 }
             except Exception as error:
-                print(self.time, 'public.mysql.MySQL.insertmany have error: %s' % error)
+                print(self.time, 'comm.mysql.MySQL.insertmany have error: %s' % error)
                 return {
                     'state': 0,
                     'msg': 'insert many data failed, error: %s' % error
@@ -156,7 +156,7 @@ class MySQL:
                         'msg': 'no data found'
                     }
             except pymysql.err.ProgrammingError as error:
-                print(self.time, 'public.mysql.MySQL.find have error: %s' % error)
+                print(self.time, 'comm.mysql.MySQL.find have error: %s' % error)
                 return {
                     'state': 0,
                     'data': None,
