@@ -49,10 +49,11 @@ def get_domain_from_db():
         logger.error(f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to get domains from asset_dns_origin: {e}")
         return allDomainsList
 
-
+# 对比SEC接口和 asset_dns_origin 表 提取新增域名
 def new_add_domains():
     """
     对比sec接口域名数据和数据库表中的域名数据  返回在sec接口里面的域名 但是不在db表里面的数据字典
+    如果有新增域名就返回新增域名
     :param:
     :return:[{},{}]   # 返回 域名 + 所属人
     """
