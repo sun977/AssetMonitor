@@ -16,10 +16,10 @@
         4. 域名解析表删除 7 天之前没有解析的域名
 """
 
-from modules.SecAPI.sec.getSecApiClient import *
-import dns.resolver
+
 from comm.mysql import *
 from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
+from modules.DomainAssetMonitor.sync.sync_sec_data2db import get_domain_from_sec
 
 
 # 配置日志记录器

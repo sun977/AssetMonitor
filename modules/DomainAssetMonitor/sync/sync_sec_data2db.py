@@ -20,24 +20,23 @@ logger = setup_logger()
 # 从sec平台获取所有的主域名，生成列表
 def get_domain_from_sec():
     """
-    从sec获取所有的主域名，生成列表【弃用，改为从表中获取域名】
+    从sec获取所有的主域名，生成列表,获取域名和所有人
     :param:
-    :return:['xxx','xxx']
+    :return:[{xxx},{xxx}]
     """
     allMainDomainsList = []
     try:
         sec = secApiClient()  # 实例化secClient
-        res = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
-        # allMainDomainsList = []
+        data = sec.get_domaininfo_lucene()  # 不带 query 参数是查询所有域名信息 数量 30087
         if res is None:
             # print('sec接口返回数据为空')
             logger.warning('sec接口返回数据为空')
             return allMainDomainsList
         else:
-            for domain in res:
-                if domain.get('DomainName') not in allMainDomainsList:
+            for item in data:
+                if item.get('DomainName') not in allMainDomainsList:   # 去重
                     # 去重获取 才14699 共30087 有重复的？ 对，sec有重复域名，域名解析多个IP的算多个
-                    allMainDomainsList.append(domain.get('DomainName'))
+                    allMainDomainsList.append({'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')})
         logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
         return allMainDomainsList
     except Exception as e:
@@ -96,7 +95,7 @@ def sync_domain_from_sec2db():
         logger.info(f"Retrieved {len(allMainDomainsList)} unique domains from SEC")
         # print("allMainDomainsList:", allMainDomainsList)
 
-        # 先获取所有域名，然后再插入数据库
+        # 先获取所有域名，然后再插入数据库a
         for item in allMainDomainsList:
             insert_record_origin(item.get('domain'), item.get('owner', ''))
             logger.info(f"Mysql Inserted domain {item.get('domain')} into asset_dns_origin")
