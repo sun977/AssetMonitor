@@ -12,8 +12,8 @@
             - 域名检查加白 --- asset_dns_white 表 数据在 asset_dns 中字段置1 isWhite=1
             - 域名失效 --- asset_dns_origin 存在 但是 没有解析
             - 域名IP为CDN --- 判断IP是 cdn IP
-        3. 原始域名表删除 7 天前的数据
-        4. 域名解析表删除 7 天之前没有解析的域名
+        3. 原始域名表删除 14 天前的数据
+        4. 域名解析表删除 14 天之前没有解析的域名
         5. 邮件告警
 """
 
@@ -29,6 +29,7 @@ logger = setup_logger()
 def select_data_from_db(sql, columnName):
     """
     根据sql从数据库中获取数据 ,根据字段去重
+    SQL: SELECT domain, owner FROM asset_dns_origin
     :param sql: string
     :param columnName: string
     :return:[{},{}]
@@ -70,11 +71,9 @@ def get_domain_from_db():
                 f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Retrieved {len(allDomainsList)} domains from asset_dns_origin")
             return allDomainsList
         else:
-            logger.warning(
-                f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
+            logger.warning(f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
     except Exception as e:
-        logger.error(
-            f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to get domains from asset_dns_origin: {e}")
+        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to get domains from asset_dns_origin: {e}")
         return allDomainsList
 
 
@@ -84,7 +83,7 @@ def new_add_domains():
     对比sec接口域名数据和数据库表中的域名数据  返回在sec接口里面的域名 但是不在db表里面的数据字典
     如果有新增域名就返回新增域名
     :param:
-    :return:[{},{}]   # 返回 域名 + 所属人
+    :return:[{},{}]   # 返回 域名 + 所属人 [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
     """
     newAddDomains = []  # 存放新增的域名
     domainsFromSecList = get_domain_from_sec()  # [{},{}] # {'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')}
@@ -112,13 +111,12 @@ def new_add_domains():
 
     return newAddDomains
 
-
 # 失效域名检测
 def check_invalid_domains():
     """
     检查 asset_dns_origin 表中失效域名
     有原始域名但是没有解析的域名 --- 在 asset_dns_origin 表，不在 asset_dns_records 表
-    落表 asset_dns
+    落表 asset_dns 域名 + 域名无效 + 备注（所属人）
     :param:
     :return:[{},{}]  # 返回 域名 + 所属人 [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
     """
@@ -151,6 +149,21 @@ def check_invalid_domains():
 
     return invalidDomains
 
+# 失效域名落表
+def insert_invalid_domains(directory):
+    """
+    [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    :param: directory : [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    :return:
+    """
+
+
+
+
+    pass
+
+
+
 # 过期域名检测
 def check_expired_domains():
     """
@@ -158,20 +171,85 @@ def check_expired_domains():
     1、在 asset_dns_records 表，updateTime 超过 3 天没有更新的
     落表 asset_dns
     :param:
-    :return:[{},{}]  # 返回 域名 + 所属人 [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    :return:[{},{}]  # 返回 域名 + 所属人 [{'domain': 'bcslivepush.b.qianxin.com'}]
     """
     expiredDomains = []
+    try:
+        sql = (
+            "SELECT domain FROM asset_dns_records WHERE updateTime < DATE_SUB(NOW(), INTERVAL 3 DAY)"
+        )
+        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Executing SQL: {sql}")
+        result = MySQL(sql=sql).exec()
+        # print(f"Result type: {type(result)}, Result content: {result}")  # 调试语句  Result type: <class 'dict'>
+        if result.get('state') == 1:
+            for item in result.get('data'):
+                expiredDomains.append(item)
+            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Found {len(expiredDomains)} expired domains")
+            return expiredDomains
+        else:
+            logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Failed to get expired domains: {result.get('msg')}")
+    except Exception as e:
+        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Failed to get expired domains: {e}")
+        return expiredDomains
+
+
+# 过期域名落表
+def insert_expired_domains(directory):
+    """
+    [{'domain': 'bcslivepush.b.qianxin.com'}]
+    :param: directory : [{'domain': 'bcslivepush.b.qianxin.com'}]
+    :return:
+    """
+
     pass
+
+
+# 判断域名是否是内网域名
+def check_domains_net_type(domain):
+    """
+    判断域名是否是内网还是外网
+    :param: domain  string
+    :return:
+    """
+    # 定义 内网域名后缀列表
+    internal_suffixes = ['qianxin-inc.cn']
+    if domain.endswith(tuple(internal_suffixes)):
+        return "Intranet"   # 内网
+    else:
+        return "Internet"   # 外网
+
 
 # 加白域名检测
 def check_white_domains():
     """
     检查 asset_dns_white 表中加白域名
     落表 asset_dns
-    :param:
-    :return:
+    :param:     domain / owner / email
+    :return:    domain / domainType / isWhite / note
     """
-    pass
+    whiteDomains = []
+    try:
+        sql = (
+            "SELECT domain, owner, email FROM asset_dns_white"
+        )
+        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: {sql}")
+        result = MySQL(sql=sql).exec()
+        if result.get('state') == 1:
+            for item in result.get('data'):
+                # 补充剩余字段  【内外网域名需要判断下】
+                item['domainType'] = check_domains_net_type(item.get('domain'))  # 新增字段 domainType
+                item['isWhite'] = 1  # 新增字段 isWhite 赋值 1
+                item['note'] = item.get('owner') + '-' + item.get('email')
+                del item['email']  # 删除 email 字段
+                whiteDomains.append(item)
+            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found {len(whiteDomains)} white domains")
+            # 插入数据库
+            return whiteDomains
+        else:
+            logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: {result.get('msg')}")
+    except Exception as e:
+        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: {e}")
+        return whiteDomains
 
 
 # 解析ip为cdn的域名检测
@@ -186,15 +264,20 @@ def check_ip_or_domain_isCdn():
     pass
 
 
-# 删除过期数据
-def delete_expired_data():
+# 删除过期数据 14 天前数据
+def delete_old_data():
     """
-    删除 asset_dns_origin 表中 7 天前的数据
-    删除 asset_dns_record 表中 7 天之前没有解析的域名
+    默认 14 天之前的数据没有价值
+    删除 asset_dns_origin 表中 14 天前的数据
+    删除 asset_dns_record 表中 14 天之前没有解析的域名
+    删除 asset_dns 监控表中 14 天之前的数据
     :param:
     :return:
     """
-    pass
+    MySQL(sql="DELETE FROM asset_dns_origin WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
+    MySQL(sql="DELETE FROM asset_dns_record WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
+    MySQL(sql="DELETE FROM asset_dns WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
+    return
 
 
 if __name__ == '__main__':
@@ -203,5 +286,11 @@ if __name__ == '__main__':
     # res = select_data_from_db("SELECT * FROM asset_dns_records limit 10", "domain")
     # print(res)
 
-    res = check_invalid_domains()
+    # res = check_invalid_domains()
+    # print(res)
+
+    # res = check_expired_domains()
+    # print(res)
+
+    res = check_white_domains()
     print(res)

@@ -191,6 +191,6 @@ class MySQL:
 
 
 if __name__ == '__main__':
-    sql = "select * from asset_dns limit 10"
+    sql = "SELECT domain FROM asset_dns_records WHERE updateTime < DATE_SUB(NOW(), INTERVAL 3 DAY)"
     res = MySQL(sql=sql).exec()  # 可用 20241223
     print(res)
