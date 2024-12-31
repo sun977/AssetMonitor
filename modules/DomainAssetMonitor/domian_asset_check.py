@@ -17,14 +17,38 @@
         5. 邮件告警
 """
 
-
 from comm.mysql import *
 from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
 from modules.DomainAssetMonitor.sync.sync_sec_data2db import get_domain_from_sec
 
-
 # 配置日志记录器
 logger = setup_logger()
+
+
+# 从数据库中获取域名数据
+def select_data_from_db(sql, columnName):
+    """
+    根据sql从数据库中获取数据 ,根据字段去重
+    :param sql: string
+    :param columnName: string
+    :return:[{},{}]
+    """
+    resDataList = []
+    try:
+        res = MySQL(sql=sql).exec()
+        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.select_data_from_db() SQL:{sql}")
+        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.select_data_from_db() Retrieved {len(res.get('data'))} data from db")
+        if res.get('state') == 1:
+            for item in res.get('data'):
+                if item.get(columnName) not in resDataList:  # 根据columnName字段去重
+                    resDataList.append(item)
+            return resDataList
+        else:
+            logger.warning(f"modules.DomainAssetMonitor.domian_asset_check.select_data_from_db() Failed to retrieve data from db: {res.get('msg')}")
+            return resDataList
+    except Exception as e:
+        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.select_data_from_db() Failed to get data from db: {e}")
+        return resDataList
 
 
 # 从数据库获取域名数据
@@ -42,13 +66,17 @@ def get_domain_from_db():
         if resOrigindomains.get('state') == 1:
             for item in resOrigindomains.get('data'):
                 allDomainsList.append(item.get('domain'))
-            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Retrieved {len(allDomainsList)} domains from asset_dns_origin")
+            logger.info(
+                f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Retrieved {len(allDomainsList)} domains from asset_dns_origin")
             return allDomainsList
         else:
-            logger.warning(f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
+            logger.warning(
+                f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to retrieve domains from asset_dns_origin: {resOrigindomains.get('msg')}")
     except Exception as e:
-        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to get domains from asset_dns_origin: {e}")
+        logger.error(
+            f"modules.DomainAssetMonitor.domian_asset_check.get_domain_from_db() Failed to get domains from asset_dns_origin: {e}")
         return allDomainsList
+
 
 # 对比SEC接口和 asset_dns_origin 表 提取新增域名
 def new_add_domains():
@@ -58,7 +86,7 @@ def new_add_domains():
     :param:
     :return:[{},{}]   # 返回 域名 + 所属人
     """
-    newAddDomains = []   # 存放新增的域名
+    newAddDomains = []  # 存放新增的域名
     domainsFromSecList = get_domain_from_sec()  # [{},{}] # {'domain': item.get('DomainName'), 'owner': item.get('PrincipalName', '')}
     domainsFromDbList = get_domain_from_db()  # ['','']
     try:
@@ -68,27 +96,62 @@ def new_add_domains():
             for item in domainsFromSecList:
                 if item.get('domain') not in domainsFromDbList:
                     newAddDomains.append(item)
-                    logger.info(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() New domain {item.get('domain')} found from SEC")
+                    logger.info(
+                        f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() New domain {item.get('domain')} found from SEC")
                 else:
-                    logger.info(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Domain {item.get('domain')} already exists in asset_dns_origin")
+                    logger.info(
+                        f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Domain {item.get('domain')} already exists in asset_dns_origin")
         else:
-            logger.warning(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() No domains found in asset_dns_origin or SEC")
+            logger.warning(
+                f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() No domains found in asset_dns_origin or SEC")
             newAddDomains = []
-        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Found {len(newAddDomains)} new domains from SEC")
+        logger.info(
+            f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Found {len(newAddDomains)} new domains from SEC")
     except Exception as e:
         logger.error(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Failed to compare domains: {e}")
 
     return newAddDomains
 
+
 # 失效域名检测
 def check_invalid_domains():
     """
     检查 asset_dns_origin 表中失效域名
+    1、有原始域名但是没有解析的域名 --- 在 asset_dns_origin 表，不在 asset_dns_records 表
+    2、在 asset_dns_records 表但是updateTime超过 3 天没有更新的
     落表 asset_dns
     :param:
-    :return:
+    :return:[{},{}]  # 返回 域名 + 所属人
     """
-    pass
+    invalidDomains = []
+    try:
+        # 只查询需要的列
+        domainsOriginList = select_data_from_db("SELECT domain, owner FROM asset_dns_origin", "domain")
+        domainsRecordsList = select_data_from_db("SELECT domain, updateTime FROM asset_dns_records", "domain")
+
+        if not domainsOriginList:   # 如果 asset_dns_origin 表没有数据
+            logger.warning("modules.DomainAssetMonitor.domian_asset_check.check_invalid_domains() No domains found in asset_dns_origin")
+            return invalidDomains
+
+        if not domainsRecordsList:  # 如果 asset_dns_records 表没有数据
+            logger.warning("modules.DomainAssetMonitor.domian_asset_check.check_invalid_domains() No domains found in asset_dns_records")
+            return invalidDomains
+
+        # 将 domainsRecordsList 转换为集合，提高查找效率
+        domainsRecordsSet = {item.get('domain') for item in domainsRecordsList}
+
+        # 遍历 domainsOriginList，判断是否在 domainsRecordsSet 中
+        for item in domainsOriginList:
+            domain = item.get('domain')  # 只取 domain 字段判断
+            if domain not in domainsRecordsSet:   # 如果 在 domainsOriginList 不在 asset_dns_records 表
+                invalidDomains.append(item)
+                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_invalid_domains() Domain {domain} is invalid")
+        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_invalid_domains() Found {len(invalidDomains)} invalid domains")
+    except Exception as e:
+        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_invalid_domains() Failed to compare domains: {e}")
+
+    return invalidDomains
+
 
 # 加白域名检测
 def check_white_domains():
@@ -100,6 +163,7 @@ def check_white_domains():
     """
     pass
 
+
 # 解析ip为cdn的域名检测
 def check_ip_or_domain_isCdn():
     """
@@ -110,6 +174,7 @@ def check_ip_or_domain_isCdn():
     :return:
     """
     pass
+
 
 # 删除过期数据
 def delete_expired_data():
@@ -123,7 +188,10 @@ def delete_expired_data():
 
 
 if __name__ == '__main__':
-    res = new_add_domains()
+    # res = new_add_domains()
+    # print(res)
+    # res = select_data_from_db("SELECT * FROM asset_dns_records limit 10", "domain")
+    # print(res)
+
+    res = check_invalid_domains()
     print(res)
-
-
