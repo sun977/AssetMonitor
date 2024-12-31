@@ -117,11 +117,10 @@ def new_add_domains():
 def check_invalid_domains():
     """
     检查 asset_dns_origin 表中失效域名
-    1、有原始域名但是没有解析的域名 --- 在 asset_dns_origin 表，不在 asset_dns_records 表
-    2、在 asset_dns_records 表但是updateTime超过 3 天没有更新的
+    有原始域名但是没有解析的域名 --- 在 asset_dns_origin 表，不在 asset_dns_records 表
     落表 asset_dns
     :param:
-    :return:[{},{}]  # 返回 域名 + 所属人
+    :return:[{},{}]  # 返回 域名 + 所属人 [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
     """
     invalidDomains = []
     try:
@@ -152,6 +151,17 @@ def check_invalid_domains():
 
     return invalidDomains
 
+# 过期域名检测
+def check_expired_domains():
+    """
+    检查 asset_dns_records 表中过期域名
+    1、在 asset_dns_records 表，updateTime 超过 3 天没有更新的
+    落表 asset_dns
+    :param:
+    :return:[{},{}]  # 返回 域名 + 所属人 [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    """
+    expiredDomains = []
+    pass
 
 # 加白域名检测
 def check_white_domains():
