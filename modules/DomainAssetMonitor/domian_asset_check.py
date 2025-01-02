@@ -204,7 +204,7 @@ def insert_expired_domains(directory):
     pass
 
 
-# 判断域名是否是内网域名
+# 判断域名是否是内网域名 【完成】
 def check_domains_net_type(domain):
     """
     判断域名是否是内网还是外网
@@ -219,7 +219,7 @@ def check_domains_net_type(domain):
         return "Internet"   # 外网
 
 
-# 加白域名检测 同步 asset_dns_white 的状态到 asset_dns
+# 加白域名检测 同步 asset_dns_white 的状态到 asset_dns  【完成】
 def check_white_domains():
     """
     检查 asset_dns_white 表中加白域名

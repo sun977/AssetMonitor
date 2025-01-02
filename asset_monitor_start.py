@@ -19,6 +19,35 @@
 
 from modules.DomainAssetMonitor.domain_asset_analysis import run_domain_asset_analysis
 
+## 方式一
+# pip install schedule
+#
+# import schedule
+# import time
+#
+# def my_task():
+#     print("Task is running...")
+#
+# # 每30分钟执行一次任务
+# schedule.every(30).minutes.do(my_task)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)  # 避免CPU占用过高
+
+## 方式二
+# pip install apscheduler
+# from apscheduler.schedulers.blocking import BlockingScheduler
+#
+# def my_task():
+#     print("Task is running...")
+#
+# sched = BlockingScheduler()
+#
+# # 每30分钟执行一次任务
+# sched.add_job(my_task, 'interval', minutes=30)
+#
+# sched.start()
+
 if __name__ == '__main__':
     # 运行域名资产分析监控
     run_domain_asset_analysis()
