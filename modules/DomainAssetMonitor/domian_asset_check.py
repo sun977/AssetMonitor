@@ -444,6 +444,7 @@ def send_new_add_domains_email(datadict):
     :return:
     """
     TODAY = datetime.now().strftime("%Y-%m-%d")
+    TIMENEW = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data = datadict
     mail = MAIL()
     mail.send_mail_html(
@@ -452,7 +453,7 @@ def send_new_add_domains_email(datadict):
         contenthtml=f"""
         <div>
             <p>------ 域名资产检测报告 ------</p>
-            <p>日期：{TODAY}</p>
+            <p>日期：{TIMENEW}</p>
             <p>SEC域名总数：{data.get('allDomains').get('count')}</p>
             <p>当天新增域名个数：{data.get('newAddDomains').get('count')}</p>
             <p>同步加白域名个数：{data.get('syncWhiteDomains').get('count')}</p>      
