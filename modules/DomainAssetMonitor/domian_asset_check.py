@@ -24,9 +24,25 @@ from comm.mysql import *
 from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
 from modules.DomainAssetMonitor.sync.sync_sec_data2db import get_domain_from_sec
 from comm.send_mail import *
+import os
+
+current_abs_path = os.path.abspath(__file__)  # 当前文件位置
+current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
+out_dir_path = os.path.abspath(current_abs_path_dir) + '../../../file/DomainAssetOut/'  # 从当前目录找到输出文件的位置
 
 # 配置日志记录器
 logger = setup_logger()
+
+
+# 写入文件函数
+def write_to(data_list, file_path):
+    data_list = data_list
+    file = file_path
+    # 打开out.txt文件
+    with open(file, 'w') as f:
+        # 写入list数据
+        for data in data_list:
+            f.write(str(data) + '\n')
 
 
 # 判断域名是否是内网域名 【完成】
@@ -432,23 +448,25 @@ def send_new_add_domains_email(datadict):
     mail = MAIL()
     mail.send_mail_html(
         subject=f"域名资产检测报告-{TODAY}",
-        userlist=["sunhaobo@qianxin.com"],
+        userlist=["sunhaobo@qianxin.com", 'g-sec-opr@qianxin.com'],
         contenthtml=f"""
         <div>
-            <p>域名资产检测报告 - {TODAY}</p>
-            <p>有效域名总数：{data.get('allDomains').get('count')}</p>
+            <p>------ 域名资产检测报告 ------</p>
+            <p>日期：{TODAY}</p>
+            <p>SEC域名总数：{data.get('allDomains').get('count')}</p>
             <p>当天新增域名个数：{data.get('newAddDomains').get('count')}</p>
             <p>同步加白域名个数：{data.get('syncWhiteDomains').get('count')}</p>      
             <p>过期域名个数：{data.get('expiredDomains').get('count')}</p>
             <p>失效域名个数：{data.get('invalidDomains').get('count')}</p>
-            <p>新增域名：</p>
+            <p>当天新增域名列表：</p>
             <ul>
-                {data.get('allDomains').get('data')}
+                {data.get('newAddDomains').get('data')}
             </ul>
         </div>
         """
     )
-    logger.info(f"modules.DomainAssetMonitor.domian_asset_check.send_new_add_domains_email() Sent new add domains email")
+    logger.info(
+        f"modules.DomainAssetMonitor.domian_asset_check.send_new_add_domains_email() Sent check result email")
 
 
 # 运行函数
@@ -463,21 +481,46 @@ def run_domain_asset_check():
     6.删除旧数据（14天前旧数据删除） 原始域名表：asset_dns_origin / 域名解析表：asset_dns_record / 域名监控表：asset_dns
     """
 
-    data = {}
+    data = {
+        'allDomains': {
+            'count': 0,
+            'data': []
+        },
+        'newAddDomains': {
+            'count': 0,
+            'data': []
+        },
+        'syncWhiteDomains': {
+            'count': 0,
+            'data': []
+        },
+        'expiredDomains': {
+            'count': 0,
+            'data': []
+        },
+        'invalidDomains': {
+            'count': 0,
+            'data': []
+        }
+    }
 
     try:
         logger.info("Starting domain_asset_check.py script")
 
         # 获取所有域名
+        logger.info("Running function get_domain_from_db()")
         domainsOriginList = select_data_from_db("SELECT domain FROM asset_dns_origin", "domain")
         data['allDomains'] = {
             'count': len(domainsOriginList),
             'data': domainsOriginList
         }
+        logger.info("Finish function get_domain_from_db()")
 
         # # 新增域名检测 【0 个】
+        logger.info("Running function new_add_domains()")
         data['newAddDomains']['data'] = new_add_domains()
         data['newAddDomains']['count'] = len(data['newAddDomains']['data'])
+        logger.info("Finish function new_add_domains()")
 
         # 同步域名加白表 【3 个】
         logger.info("Running function check_white_domains_insert_db()")
@@ -509,13 +552,19 @@ def run_domain_asset_check():
         # 统计数据发送邮件
         send_new_add_domains_email(data)
 
-        # 详细数据可以写入文【待办】
+        # 详细数据可以写入文
+        print("PATH:", os.path.join(out_dir_path, "allDomains.txt"))
+        # write_to(data.get('allDomains').get('data'), os.path.normpath(os.path.join(out_dir_path, "allDomains.txt")))
+        write_to(data.get('allDomains').get('data'), os.path.join(out_dir_path, "allDomains.txt"))
+        write_to(data.get('newAddDomains').get('data'), os.path.join(out_dir_path, "newAddDomains.txt"))
+        write_to(data.get('syncWhiteDomains').get('data'), os.path.join(out_dir_path, "syncWhiteDomains.txt"))
+        write_to(data.get('expiredDomains').get('data'), os.path.join(out_dir_path, "expiredDomains.txt"))
+        write_to(data.get('invalidDomains').get('data'), os.path.join(out_dir_path, "invalidDomains.txt"))
+
 
     except Exception as e:
         logger.error(
             f"modules.DomainAssetMonitor.domian_asset_check.run_domain_asset_check() Running domain_asset_check.py script failed: {e}")
-
-
 
 
 if __name__ == '__main__':

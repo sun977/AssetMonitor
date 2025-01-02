@@ -1,0 +1,3 @@
+{'domain': 'test.qianxin-inc.cn', 'owner': 'ÀÔ∫∆≤©', 'isWhite': 1, 'note': 'ÀÔ∫∆≤©-sunhaobo@qianxin.com-≤‚ ‘', 'domainType': 'Intranet'}
+{'domain': 'example.com', 'owner': 'sunhaobo', 'isWhite': 1, 'note': 'sunhaobo-sunhaobo@163.com-≤‚ ‘', 'domainType': 'Internet'}
+{'domain': 'ceshi@qq.com', 'owner': 'sunhaobo', 'isWhite': 1, 'note': 'sunhaobo-sunhaobo@163.com-≤‚ ‘”Ú√˚', 'domainType': 'Internet'}
