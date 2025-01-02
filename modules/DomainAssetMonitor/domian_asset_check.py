@@ -219,7 +219,7 @@ def check_domains_net_type(domain):
         return "Internet"   # 外网
 
 
-# 加白域名检测
+# 加白域名检测 同步 asset_dns_white 的状态到 asset_dns
 def check_white_domains():
     """
     检查 asset_dns_white 表中加白域名
@@ -230,7 +230,7 @@ def check_white_domains():
     whiteDomains = []
     try:
         sql = (
-            "SELECT domain, owner, email FROM asset_dns_white"
+            "SELECT domain, owner, email, isWhite, note FROM asset_dns_white"
         )
         logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: {sql}")
         result = MySQL(sql=sql).exec()
@@ -238,8 +238,8 @@ def check_white_domains():
             for item in result.get('data'):
                 # 补充剩余字段  【内外网域名需要判断下】
                 item['domainType'] = check_domains_net_type(item.get('domain'))  # 新增字段 domainType
-                item['isWhite'] = 1  # 新增字段 isWhite 赋值 1
-                item['note'] = item.get('owner') + '-' + item.get('email')
+                item['isWhite'] = item.get('isWhite')  # 新增字段 isWhite 赋值 1   # 加白表增加一个字段用来表示加白是否启用  1 启用 0 不启用 20250102
+                item['note'] = item.get('owner') + '-' + item.get('email') + '-' + item.get('note', '')
                 del item['email']  # 删除 email 字段
                 whiteDomains.append(item)
                 logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains {item.get('domain')}")

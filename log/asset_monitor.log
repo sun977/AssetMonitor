@@ -1,33 +1,16 @@
-2024-12-31 17:01:54[INFO] modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Executing SQL: SELECT domain FROM asset_dns_records WHERE updateTime < DATE_SUB(NOW(), INTERVAL 3 DAY)
-2024-12-31 17:01:54[INFO] modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Found 2114 expired domains
-2024-12-31 18:15:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT doamin, owner, email FROM asset_dns_white
-2024-12-31 18:15:59[ERROR] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: (1054, "Unknown column 'doamin' in 'field list'")
-2024-12-31 18:16:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2024-12-31 18:16:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2024-12-31 18:18:44[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2024-12-31 18:18:44[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2024-12-31 18:27:09[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2024-12-31 18:27:09[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2024-12-31 18:27:09[ERROR] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: not enough arguments for format string
-2024-12-31 18:30:40[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2024-12-31 18:30:40[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2024-12-31 18:30:40[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES (example.com, Internet, 1, sunhaobo-sunhaobo@163.com) ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='1',note='sunhaobo-sunhaobo@163.com',updateTime=CURRENT_TIMESTAMP(6);
-2024-12-31 18:30:40[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 2 white domains into asset_dns
-2025-01-02 09:59:12[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2025-01-02 09:59:12[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2025-01-02 09:59:12[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES (example.com, Internet, 1, sunhaobo-sunhaobo63.com) ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='1',note='sunhaobo-sunhaobo63.com',updateTime=CURRENT_TIMESTAMP(6);
-2025-01-02 09:59:12[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 2 white domains into asset_dns
-2025-01-02 09:59:45[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2025-01-02 09:59:45[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2025-01-02 09:59:45[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES (example.com, Internet, 1, sunhaobo-sunhaobo63.com) ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='1',note='sunhaobo-sunhaobo63.com',updateTime=CURRENT_TIMESTAMP(6);
-2025-01-02 09:59:45[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 2 white domains into asset_dns
-2025-01-02 10:03:04[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2025-01-02 10:03:04[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found 2 white domains
-2025-01-02 10:03:04[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('example.com', 'Internet', '1', 'sunhaobo-sunhaobo@163.com') ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='1',note='sunhaobo-sunhaobo@163.com',updateTime=CURRENT_TIMESTAMP(6);
-2025-01-02 10:03:04[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 2 white domains into asset_dns
-2025-01-02 10:12:33[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email FROM asset_dns_white
-2025-01-02 10:12:33[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains test.qianxin-inc.cn
-2025-01-02 10:12:33[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('test.qianxin-inc.cn', 'Intranet', '1', 'ËïºÆ²©-sunhaobo@qianxin.com') ON DUPLICATE KEY UPDATE domain='test.qianxin-inc.cn',domainType='Intranet', isWhite='1',note='ËïºÆ²©-sunhaobo@qianxin.com',updateTime=CURRENT_TIMESTAMP(6);
-2025-01-02 10:12:33[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains example.com
-2025-01-02 10:12:33[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('example.com', 'Internet', '1', 'sunhaobo-sunhaobo@163.com') ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='1',note='sunhaobo-sunhaobo@163.com',updateTime=CURRENT_TIMESTAMP(6);
-2025-01-02 10:12:33[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 2 white domains into asset_dns
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email, isWhite, note FROM asset_dns_white
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains test.qianxin-inc.cn
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('test.qianxin-inc.cn', 'Intranet', '1', 'ËïºÆ²©-sunhaobo@qianxin.com-²âÊÔ') ON DUPLICATE KEY UPDATE domain='test.qianxin-inc.cn',domainType='Intranet', isWhite='1',note='ËïºÆ²©-sunhaobo@qianxin.com-²âÊÔ',updateTime=CURRENT_TIMESTAMP(6);
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains example.com
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('example.com', 'Internet', '0', 'sunhaobo-sunhaobo@163.com-²âÊÔ') ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='0',note='sunhaobo-sunhaobo@163.com-²âÊÔ',updateTime=CURRENT_TIMESTAMP(6);
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains ceshi@qq.com
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('ceshi@qq.com', 'Internet', '1', 'sunhaobo\-sunhaobo@163.com-²âÊÔÓòÃû') ON DUPLICATE KEY UPDATE domain='ceshi@qq.com',domainType='Internet', isWhite='1',note='sunhaobo\-sunhaobo@163.com-²âÊÔÓòÃû',updateTime=CURRENT_TIMESTAMP(6);
+2025-01-02 10:54:59[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 3 white domains into asset_dns
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: SELECT domain, owner, email, isWhite, note FROM asset_dns_white
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains test.qianxin-inc.cn
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('test.qianxin-inc.cn', 'Intranet', '1', 'ËïºÆ²©-sunhaobo@qianxin.com-²âÊÔ') ON DUPLICATE KEY UPDATE domain='test.qianxin-inc.cn',domainType='Intranet', isWhite='1',note='ËïºÆ²©-sunhaobo@qianxin.com-²âÊÔ',updateTime=CURRENT_TIMESTAMP(6);
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains example.com
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('example.com', 'Internet', '0', 'sunhaobo-sunhaobo@163.com-²âÊÔ') ON DUPLICATE KEY UPDATE domain='example.com',domainType='Internet', isWhite='0',note='sunhaobo-sunhaobo@163.com-²âÊÔ',updateTime=CURRENT_TIMESTAMP(6);
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains ceshi@qq.com
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:INSERT INTO asset_dns (domain, domainType, isWhite, note) VALUES ('ceshi@qq.com', 'Internet', '1', 'sunhaobo-sunhaobo@163.com-²âÊÔÓòÃû') ON DUPLICATE KEY UPDATE domain='ceshi@qq.com',domainType='Internet', isWhite='1',note='sunhaobo-sunhaobo@163.com-²âÊÔÓòÃû',updateTime=CURRENT_TIMESTAMP(6);
+2025-01-02 10:56:15[INFO] modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted 3 white domains into asset_dns
