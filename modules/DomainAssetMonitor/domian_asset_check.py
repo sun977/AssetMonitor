@@ -3,18 +3,20 @@
 
 """
     auth: sunhaobo
-    version: v2.0
+    version: v3.0
     function: 检查域名情况并邮件
-    date: 2024.12.25
+    date: 2025.01.02
     note:
-        1. 新增域名告警  --- sec域名和 asset_dns_origin 中域名差值
-        2. 域名有效性告警 --- 失效域名 落表 asset_dns
-            - 域名检查加白 --- asset_dns_white 表 数据在 asset_dns 中字段置1 isWhite=1
-            - 域名失效 --- asset_dns_origin 存在 但是 没有解析
-            - 域名IP为CDN --- 判断IP是 cdn IP
+        1. 新增域名告警  --- sec域名 和 asset_dns_origin 中域名差值
+            -  邮件告警
+        2. 域名有效性检测
+            - 域名检查加白 --- 同步 asset_dns_white 表 数据到 asset_dns 中 字段 isWhite=1
+            - 域名过期检查 --- 同步 asset_dns_records 表中 updateTime 超过 3 天没有更新的数据 到 asset_dns 中 字段 isUse=0
+            - 域名失效检查 --- 同步 asset_dns_origin 存在且不在 asset_dns_records 表中数据到 asset_dns 中 字段 isUse=0
+            - 域名IP为CDN --- 判断IP是 cdn IP (暂时未做)
         3. 原始域名表删除 14 天前的数据
         4. 域名解析表删除 14 天之前没有解析的域名
-        5. 邮件告警
+        5. 域名监控表删除 14 天前的数据
 """
 
 from comm.mysql import *
@@ -40,7 +42,7 @@ def check_domains_net_type(domain):
         return "Internet"  # 外网
 
 
-# 从数据库中获取域名数据
+# 从数据库中获取域名数据 【完成】
 def select_data_from_db(sql, columnName):
     """
     根据sql从数据库中获取数据 ,根据字段去重
@@ -70,7 +72,7 @@ def select_data_from_db(sql, columnName):
         return resDataList
 
 
-# 从数据库获取域名数据
+# 从数据库获取域名数据 【完成】
 def get_domain_from_db():
     """
     从 asset_dns_origin 获取 域名
@@ -130,6 +132,17 @@ def new_add_domains():
         logger.error(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Failed to compare domains: {e}")
 
     return newAddDomains
+
+
+# 新增域名邮件发送
+def send_new_add_domains_email(newAddDomainsList):
+    """
+
+    :param newAddDomainsList: [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    :return:
+    """
+
+    pass
 
 
 # 失效域名检测  【完成】  在 asset_dns_origin 表，不在 asset_dns_records 表
@@ -243,9 +256,10 @@ def check_expired_domains():
             for item in result.get('data'):
                 expiredDomains.append(item)
             # 数据需要去重一下，因为解析表有多种记录的解析值
-            expiredDomainsSet = {item.get('domain') for item in expiredDomains}   # 利用集合的唯一性 实现 去重
+            expiredDomainsSet = {item.get('domain') for item in expiredDomains}  # 利用集合的唯一性 实现 去重
             expiredDomains = [{'domain': domain} for domain in expiredDomainsSet]  # 去重后 重新 构造列表
-            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Found {len(expiredDomains)} expired domains")
+            logger.info(
+                f"modules.DomainAssetMonitor.domian_asset_check.check_expired_domains() Found {len(expiredDomains)} expired domains")
             return expiredDomains
         else:
             logger.error(
@@ -390,13 +404,48 @@ def delete_old_data():
 # 运行函数
 def run_domain_asset_check():
     """
-
-    :return:
+    串联函数,按顺序执行
+    1.新增域名检测
+    2.同步加白域名 asset_dns_white 到 asset_dns 监控表
+    3.域名过期检测
+    4.域名失效检测
+    5.域名和IP是否CDN监控(未完成)
+    6.删除旧数据（14天前旧数据删除） 原始域名表：asset_dns_origin / 域名解析表：asset_dns_record / 域名监控表：asset_dns
     """
-    pass
+    try:
+        logger.info("Starting domain_asset_check.py script")
+        # # 新增域名检测
+        # newAddDomains = new_add_domains()
+
+        # 同步域名加白表
+        logger.info("Running function check_white_domains_insert_db()")
+        check_white_domains_insert_db()
+        logger.info("Finish function check_white_domains_insert_db()")
+
+        # 检查域名是否过期
+        logger.info("Running function check_expired_domains() and insert_expired_domains()")
+        expiredDomainsList = check_expired_domains()  # 检查域名是否过期
+        insert_expired_domains(expiredDomainsList)  # 插入过期域名入表 asset_dns 可返回 插入域名列表
+        logger.info("Finish function check_expired_domains() and insert_expired_domains()")
+
+        # 检查域名是否失效
+        logger.info("Running function check_invalid_domains() and insert_invalid_domains()")
+        invalidDomainsList = check_invalid_domains()  # 检查域名是否失效
+        insert_invalid_domains(invalidDomainsList)  # 插入失效域名入表 asset_dns 可返回 插入域名列表
+        logger.info("Finish function check_invalid_domains() and insert_invalid_domains()")
+
+        # 删除旧数据
+        logger.info("Running function delete_old_data()")
+        delete_old_data()
+        logger.info("Finish function delete_old_data()")
+
+    except Exception as e:
+        logger.error(
+            f"modules.DomainAssetMonitor.domian_asset_check.run_domain_asset_check() Running domain_asset_check.py script failed: {e}")
 
 
 if __name__ == '__main__':
+    run_domain_asset_check()
     # res = new_add_domains()
     # print(res)
     # res = select_data_from_db("SELECT * FROM asset_dns_records limit 10", "domain")
@@ -412,7 +461,7 @@ if __name__ == '__main__':
     # res = check_white_domains_insert_db()
     # print(res)
 
-    res = check_expired_domains()
-    print(res)
-    res1 = insert_expired_domains(res)
-    print("res1:\n", res1)
+    # res = check_expired_domains()
+    # print(res)
+    # res1 = insert_expired_domains(res)
+    # print("res1:\n", res1)
