@@ -18,6 +18,7 @@
 """
 
 from modules.DomainAssetMonitor.domain_asset_analysis import run_domain_asset_analysis
+from modules.DomainAssetMonitor.domian_asset_check import run_domain_asset_check
 
 ## 方式一
 # pip install schedule
@@ -51,3 +52,7 @@ from modules.DomainAssetMonitor.domain_asset_analysis import run_domain_asset_an
 if __name__ == '__main__':
     # 运行域名资产分析监控
     run_domain_asset_analysis()
+
+    # 运行域名资产检查监控
+    run_domain_asset_check()
+

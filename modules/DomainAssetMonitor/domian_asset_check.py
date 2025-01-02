@@ -375,7 +375,7 @@ def check_white_domains_insert_db():
 # 解析ip为cdn的域名检测
 def check_ip_or_domain_isCdn():
     """
-    检查 asset_dns_record 表中解析A记录ip为 CDN IP
+    检查 asset_dns_records 表中解析A记录ip为 CDN IP
     检查 asset_dns_origin 表中域名为CDN域名
     落表 asset_dns
     :param:
@@ -389,15 +389,16 @@ def delete_old_data():
     """
     默认 14 天之前的数据没有价值
     删除 asset_dns_origin 表中 14 天前的数据
-    删除 asset_dns_record 表中 14 天之前没有解析的域名
+    删除 asset_dns_records 表中 14 天之前没有解析的域名
     删除 asset_dns 监控表中 14 天之前的数据
     加白表不用删除，加白表中的数据每天会同步一次到 asset_dns 所以监控表 updateTime 数据会更新
     :param:
     :return:
     """
     MySQL(sql="DELETE FROM asset_dns_origin WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
-    MySQL(sql="DELETE FROM asset_dns_record WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
+    MySQL(sql="DELETE FROM asset_dns_records WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
     MySQL(sql="DELETE FROM asset_dns WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
+    logger.info("modules.DomainAssetMonitor.domian_asset_check.delete_old_data() Deleted old data")
     return
 
 
@@ -415,7 +416,7 @@ def run_domain_asset_check():
     try:
         logger.info("Starting domain_asset_check.py script")
         # # 新增域名检测
-        # newAddDomains = new_add_domains()
+        newAddDomains = new_add_domains()
 
         # 同步域名加白表
         logger.info("Running function check_white_domains_insert_db()")
