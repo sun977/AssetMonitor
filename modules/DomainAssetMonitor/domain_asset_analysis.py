@@ -155,7 +155,7 @@ def filter_domains(domains):
     :return:['','']
     """
     # whitelist = ['example.com', 'example.net']
-    sql_whitelist = "SELECT domain FROM asset_dns_white"  # 数据库中获取白名单
+    sql_whitelist = "SELECT domain FROM asset_dns_white where isWhite = '1'"  # 数据库中获取白名单
     res = MySQL(sql=sql_whitelist).exec()
     if res.get('state') == 1:  # 数据库sql执行成功
         if res.get('data') is not None:  # 数据库存在数据

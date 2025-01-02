@@ -77,7 +77,7 @@ def get_domain_from_db():
         return allDomainsList
 
 
-# 对比SEC接口和 asset_dns_origin 表 提取新增域名
+# 对比SEC接口和 asset_dns_origin 表 提取新增域名 每天执行一次 执行结果发送邮件告知
 def new_add_domains():
     """
     对比sec接口域名数据和数据库表中的域名数据  返回在sec接口里面的域名 但是不在db表里面的数据字典
