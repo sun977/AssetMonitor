@@ -97,7 +97,7 @@ def insert_record(cursor, domain, record_type, record_info):
     ))
 
 def main():
-    file_path = '../domains2.txt'
+    file_path = 'domains2.txt'
     domains = read_domains_from_file(file_path)
     record_types = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SRV']  # 可以根据需要添加更多记录类型
 

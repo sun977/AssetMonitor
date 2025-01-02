@@ -46,7 +46,7 @@ def read_domains_from_file(file_path):
     return domains
 
 def main():
-    file_path = '../domains.txt'
+    file_path = 'domains.txt'
     domains = read_domains_from_file(file_path)
     record_types = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SRV']  # 可以根据需要添加更多记录类型
 
