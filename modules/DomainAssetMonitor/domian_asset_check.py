@@ -24,6 +24,19 @@ from modules.DomainAssetMonitor.sync.sync_sec_data2db import get_domain_from_sec
 # 配置日志记录器
 logger = setup_logger()
 
+# 判断域名是否是内网域名 【完成】
+def check_domains_net_type(domain):
+    """
+    判断域名是否是内网还是外网
+    :param: domain  string
+    :return: Intranet / Internet
+    """
+    # 定义 内网域名后缀列表
+    internal_suffixes = ['qianxin-inc.cn']
+    if domain.endswith(tuple(internal_suffixes)):
+        return "Intranet"   # 内网
+    else:
+        return "Internet"   # 外网
 
 # 从数据库中获取域名数据
 def select_data_from_db(sql, columnName):
@@ -150,17 +163,43 @@ def check_invalid_domains():
     return invalidDomains
 
 # 失效域名落表
-def insert_invalid_domains(directory):
+def insert_invalid_domains(domainList):
     """
-    [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
-    :param: directory : [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
-    :return:
+    落表 asset_dns 域名 + 域名无效 + 备注（所属人）
+    :param: domainList : [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    :return: domain / domainType / isUse / note
     """
+    noUseDomainsList = domainList
+    resNoUseDomainsList = []
+    try:
+        for item in noUseDomainsList:
+            item['domainType'] = check_domains_net_type(item.get('domain'))  # 新增字段 域名类型
+            item['isUse'] = 0  # 新增字段 是否使用 asset_dns 表中 isUse 是 int 类型
+            item['note'] = item.get('owner') # 新增字段 备注
+            del item['owner']  # 删除 owner 字段
+            resNoUseDomainsList.append(item)
+            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.insert_invalid_domains() Found invalid doamin {item.get('domain')}")
+            # 插入数据库
+            sql_insert = (
+                    "INSERT INTO asset_dns (domain, domainType, isUse, note) "
+                    "VALUES ('%s', '%s', '%s', '%s') "
+                    "ON DUPLICATE KEY UPDATE "
+                    "domain='%s',domainType='%s', isUse='%s',note='%s',updateTime=CURRENT_TIMESTAMP(6);" % (
+                        item.get('domain'), item.get('domainType'), item.get('isUse'), item.get('note'), item.get('domain'), item.get('domainType'), item.get('isUse'), item.get('note'),  # 所有的参数都在这里
+                    )
+            )
+            resDB = MySQL(sql=sql_insert).exec()
+            if resDB.get('state') == 1:
+                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.insert_invalid_domains() SQL:{sql_insert}")
+                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.insert_invalid_domains() Mysql Inserted invalid domain {item.get('domain')}")
+            else:
+                logger.error(f"modules.DomainAssetMonitor.domian_asset_check.insert_invalid_domains() Mysql.exec().state == 0 : {resDB.get('msg')} ")
+            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.insert_invalid_domains() Mysql Inserted invalid domain {item.get('domain')}")
+            return resNoUseDomainsList
+    except Exception as e:
+        logger.error(f"modules.DomainAssetMonitor.domian_asset_check.insert_invalid_domains() Failed to insert invalid domains: {e}")
+        return resNoUseDomainsList
 
-
-
-
-    pass
 
 
 
@@ -204,22 +243,7 @@ def insert_expired_domains(directory):
     pass
 
 
-# 判断域名是否是内网域名 【完成】
-def check_domains_net_type(domain):
-    """
-    判断域名是否是内网还是外网
-    :param: domain  string
-    :return:
-    """
-    # 定义 内网域名后缀列表
-    internal_suffixes = ['qianxin-inc.cn']
-    if domain.endswith(tuple(internal_suffixes)):
-        return "Intranet"   # 内网
-    else:
-        return "Internet"   # 外网
-
-
-# 加白域名检测 同步 asset_dns_white 的状态到 asset_dns  【完成】
+# 加白域名检测 同步 asset_dns_white 的状态到 asset_dns  每小时一次 【完成】
 def check_white_domains():
     """
     检查 asset_dns_white 表中加白域名
@@ -232,17 +256,17 @@ def check_white_domains():
         sql = (
             "SELECT domain, owner, email, isWhite, note FROM asset_dns_white"
         )
-        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Executing SQL: {sql}")
+        logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL: {sql}")
         result = MySQL(sql=sql).exec()
         if result.get('state') == 1:
             for item in result.get('data'):
                 # 补充剩余字段  【内外网域名需要判断下】
                 item['domainType'] = check_domains_net_type(item.get('domain'))  # 新增字段 domainType
-                item['isWhite'] = item.get('isWhite')  # 新增字段 isWhite 赋值 1   # 加白表增加一个字段用来表示加白是否启用  1 启用 0 不启用 20250102
+                item['isWhite'] = int(item.get('isWhite'))  # 新增字段 isWhite 赋值 1   # 加白表增加一个字段用来表示加白是否启用  1 启用 0 不启用 20250102
                 item['note'] = item.get('owner') + '-' + item.get('email') + '-' + item.get('note', '')
                 del item['email']  # 删除 email 字段
                 whiteDomains.append(item)
-                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains {item.get('domain')}")
+                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domain {item.get('domain')}")
                 # 插入数据库
                 sql_insert = (
                     "INSERT INTO asset_dns (domain, domainType, isWhite, note) "
@@ -252,12 +276,16 @@ def check_white_domains():
                         item.get('domain'), item.get('domainType'), item.get('isWhite'), item.get('note'), item.get('domain'), item.get('domainType'), item.get('isWhite'), item.get('note'),  # 所有的参数都在这里
                     )
                 )
-                MySQL(sql=sql_insert).exec()
-                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:{sql_insert}")
-            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted {len(whiteDomains)} white domains into asset_dns")
+                resdb = MySQL(sql=sql_insert).exec()
+                if resdb.get('state') == 1:
+                    logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:{sql_insert}")
+                    logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Mysql Inserted white domain {item.get('domain')} into asset_dns")
+                else:
+                    logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Mysql Failed to insert white domain {item.get('domain')} into asset_dns: {resdb.get('msg')}")
+            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Mysql Inserted {len(whiteDomains)} white domains into asset_dns")
             return whiteDomains
         else:
-            logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: {result.get('msg')}")
+            logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Mysql.exec().state == 0 : {result.get('msg')}")
     except Exception as e:
         logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: {e}")
         return whiteDomains
@@ -275,7 +303,7 @@ def check_ip_or_domain_isCdn():
     pass
 
 
-# 删除过期数据 14 天前数据
+# 删除过期数据 14 天前数据 每天执行一次 【完成】
 def delete_old_data():
     """
     默认 14 天之前的数据没有价值
@@ -291,6 +319,13 @@ def delete_old_data():
     MySQL(sql="DELETE FROM asset_dns WHERE updateTime < DATE_SUB(NOW(), INTERVAL 14 DAY)").exec()
     return
 
+# 运行函数
+def run_domain_asset_check():
+    """
+
+    :return:
+    """
+    pass
 
 if __name__ == '__main__':
     # res = new_add_domains()
