@@ -242,8 +242,19 @@ def check_white_domains():
                 item['note'] = item.get('owner') + '-' + item.get('email')
                 del item['email']  # 删除 email 字段
                 whiteDomains.append(item)
-            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found {len(whiteDomains)} white domains")
-            # 插入数据库
+                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Found white domains {item.get('domain')}")
+                # 插入数据库
+                sql_insert = (
+                    "INSERT INTO asset_dns (domain, domainType, isWhite, note) "
+                    "VALUES ('%s', '%s', '%s', '%s') "
+                    "ON DUPLICATE KEY UPDATE "
+                    "domain='%s',domainType='%s', isWhite='%s',note='%s',updateTime=CURRENT_TIMESTAMP(6);" % (
+                        item.get('domain'), item.get('domainType'), item.get('isWhite'), item.get('note'), item.get('domain'), item.get('domainType'), item.get('isWhite'), item.get('note'),  # 所有的参数都在这里
+                    )
+                )
+                MySQL(sql=sql_insert).exec()
+                logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() SQL:{sql_insert}")
+            logger.info(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Inserted {len(whiteDomains)} white domains into asset_dns")
             return whiteDomains
         else:
             logger.error(f"modules.DomainAssetMonitor.domian_asset_check.check_white_domains() Failed to get white domains: {result.get('msg')}")
@@ -271,6 +282,7 @@ def delete_old_data():
     删除 asset_dns_origin 表中 14 天前的数据
     删除 asset_dns_record 表中 14 天之前没有解析的域名
     删除 asset_dns 监控表中 14 天之前的数据
+    加白表不用删除，加白表中的数据每天会同步一次到 asset_dns 所以监控表 updateTime 数据会更新
     :param:
     :return:
     """
