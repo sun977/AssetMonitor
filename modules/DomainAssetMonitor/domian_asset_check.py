@@ -558,7 +558,7 @@ def run_domain_asset_check():
 
         # 详细数据可以写入文
         print("PATH:", os.path.join(out_dir_path, "allDomains.txt"))
-        logger.info(f"PATH:, {os.path.join(out_dir_path,'allDomains.txt')}")
+        logger.info(f"OUT PATH:, {os.path.join(out_dir_path,'allDomains.txt')}")
         # write_to(data.get('allDomains').get('data'), os.path.normpath(os.path.join(out_dir_path, "allDomains.txt")))
         write_to(data.get('allDomains').get('data'), os.path.join(out_dir_path, "allDomains.txt"))
         write_to(data.get('newAddDomains').get('data'), os.path.join(out_dir_path, "newAddDomains.txt"))
