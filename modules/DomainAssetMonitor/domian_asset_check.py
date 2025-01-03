@@ -449,8 +449,8 @@ def send_new_add_domains_email(datadict):
     mail = MAIL()
     mail.send_mail_html(
         subject=f"域名资产检测报告-{TODAY}",
-        # userlist=["sunhaobo@qianxin.com", 'g-sec-opr@qianxin.com'],
-        userlist=["sunhaobo@qianxin.com"],
+        userlist=["sunhaobo@qianxin.com", 'g-sec-opr@qianxin.com'],
+        # userlist=["sunhaobo@qianxin.com"],
         contenthtml=f"""
         <div>
             <p>------ 域名资产检测报告 ------</p>
