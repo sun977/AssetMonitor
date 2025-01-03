@@ -28,7 +28,7 @@ import os
 
 current_abs_path = os.path.abspath(__file__)  # 当前文件位置
 current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
-out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../file/DomainAssetOut/'  # 从当前目录找到输出文件的位置
+out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../file/DomainAssetOut/'  # 从当前目录找到输出文件的位置
 
 # 配置日志记录器
 logger = setup_logger()
@@ -449,7 +449,8 @@ def send_new_add_domains_email(datadict):
     mail = MAIL()
     mail.send_mail_html(
         subject=f"域名资产检测报告-{TODAY}",
-        userlist=["sunhaobo@qianxin.com", 'g-sec-opr@qianxin.com'],
+        # userlist=["sunhaobo@qianxin.com", 'g-sec-opr@qianxin.com'],
+        userlist=["sunhaobo@qianxin.com"],
         contenthtml=f"""
         <div>
             <p>------ 域名资产检测报告 ------</p>
@@ -557,7 +558,7 @@ def run_domain_asset_check():
 
         # 详细数据可以写入文
         print("PATH:", os.path.join(out_dir_path, "allDomains.txt"))
-        logger.info("PATH:", os.path.join(out_dir_path, "allDomains.txt"))
+        logger.info(f"PATH:, {os.path.join(out_dir_path,'allDomains.txt')}")
         # write_to(data.get('allDomains').get('data'), os.path.normpath(os.path.join(out_dir_path, "allDomains.txt")))
         write_to(data.get('allDomains').get('data'), os.path.join(out_dir_path, "allDomains.txt"))
         write_to(data.get('newAddDomains').get('data'), os.path.join(out_dir_path, "newAddDomains.txt"))
