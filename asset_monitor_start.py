@@ -53,6 +53,6 @@ if __name__ == '__main__':
     # 运行域名资产分析监控
     run_domain_asset_analysis()
 
-    # 运行域名资产检查监控
+    # 运行域名资产检查监控 自带邮件通知
     run_domain_asset_check()
 
