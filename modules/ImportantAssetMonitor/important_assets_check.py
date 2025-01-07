@@ -321,7 +321,7 @@ def get_ip_from_db():
 def insert_key_asset_ip_detail(data):
     """
     封装成字典然后插入
-    :param ip_list_db:
+    :param data:
     :return:
     """
     # data_dcit = {
