@@ -1,0 +1,24 @@
+2025-01-07 16:04:10[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:04:28[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:06:00[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:06:00[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:21:53[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:21:54[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:23:04[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:23:04[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:23:57[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:24:03[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:26:40[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:26:40[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:30:15[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:30:15[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:30:58[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:30:58[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:31:36[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:31:36[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 1 IPs from SEC
+2025-01-07 16:39:52[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:39:53[INFO] Retrieved 2 IPs from SEC
+2025-01-07 16:44:26[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:44:27[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 2 IPs from SEC
+2025-01-07 16:46:16[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started
+2025-01-07 16:46:16[INFO] modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved 2 IPs from SEC

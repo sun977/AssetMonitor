@@ -17,10 +17,9 @@
             判断日志状态 状态 是 输出 日志采集的日志类型 状态 不是 告警
         3.需要维护重保资产的 list
 """
-
-from SecAPI.sec.getSecApiClient import *
+from modules.SecAPI.sec.getSecApiClient import *
 from datetime import time, datetime
-from SecAPI.tools.send_mail import *
+from comm.send_mail import *
 
 
 def read_from(file_path):

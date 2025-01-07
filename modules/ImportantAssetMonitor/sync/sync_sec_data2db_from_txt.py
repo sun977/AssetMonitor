@@ -1,0 +1,104 @@
+# !/usr/bin/env python3
+# _*_ coding: utf-8 _*_
+"""
+    auth: sunhaobo
+    version: v1.0
+    function: Check Important Assets
+    date: 2025.01.07
+    note: 从 im_asset_ip.txt 文本中获取IP，根据IP同步sec平台IP数据到监控平台
+"""
+
+from modules.ImportantAssetMonitor.config.logger_config import setup_logger
+import os
+from datetime import datetime, time
+from comm.mysql import *
+from modules.SecAPI.sec.getSecApiClient import *
+
+current_abs_path = os.path.abspath(__file__)  # 当前文件位置
+current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
+out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../file/ImportantAssetOut/'  # 从当前目录找到输出文件的位置
+
+
+# 配置日志记录器
+logger = setup_logger()
+
+
+def read_from(file_path):
+    file = file_path
+    # 读取文件内容
+    with open(file, 'r') as f:
+        data_list = f.readlines()
+    # 去除每行的换行符
+    data_list = [data.strip() for data in data_list]
+    return data_list
+
+
+def write_to(data_list, file_path):
+    data_list = data_list
+    file = file_path
+    # 打开out.txt文件
+    with open(file, 'w') as f:
+        # 写入list数据
+        for data in data_list:
+            f.write(str(data) + '\n')
+
+
+# 从 SEC 平台获取 IP 信息
+def get_ip_from_sec(iplist):
+    """
+    根据IP列表，从SEC获取IP详细信息
+    :param iplist: IP列表
+    :return: 包含IP详细信息的列表 [{'ip': '10.44.112.17', 'project': '奇安信集团- CRM系统采购及规划建设项目', 'owner': '娄卫赢'}, {'ip': '10.44.112.7', 'project': '奇安信集团- CRM系统采购及规划建设项目', 'owner': '娄卫赢'}]
+    """
+
+    if not isinstance(iplist, (list, tuple, set)):
+        raise ValueError("iplist 必须是列表、元组或集合")
+
+    ip_set = set(iplist)
+    all_ip_info_list = []
+    processed_ips = set()  # 使用集合来避免重复
+
+    try:
+        sec = secApiClient()  # 实例化secClient
+        for ip in ip_set:
+            query = f'ipassets_ip:"{ip}"'
+            data = sec.get_ipInformation_lucene(query)
+
+            if data is None:
+                logger.warning(f'sec接口返回数据为空，IP: {ip}')
+                continue
+
+            for item in data:
+                ip_address = item.get('ipassets_ip')
+                if ip_address not in processed_ips:
+                    processed_ips.add(ip_address)
+                    all_ip_info_list.append({
+                        'ip': ip_address,
+                        'project': item.get('ipassets_project_name', ''),
+                        'owner': item.get('ipassets_ops_operations_name', '')
+                    })
+
+        logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Retrieved {len(all_ip_info_list)} IPs from SEC")
+        return all_ip_info_list
+
+    except secApiClient.SpecificException as e:
+        logger.error(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Error: {e}")
+        return all_ip_info_list
+    except Exception as e:
+        logger.error(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.get_ip_from_SEC() Unexpected error : {e}")
+        # raise  # 重新抛出未知异常以便进一步处理
+        return all_ip_info_list
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started")
+    file_path = os.path.abspath(current_abs_path_dir) + '/iptest.txt'
+    data_list = read_from(file_path)
+    print("读取文件列表：", data_list)
+    res = get_ip_from_sec(data_list)
+    print("从SEC获取的IP信息：", res)
