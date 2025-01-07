@@ -34,7 +34,7 @@ def setup_logger():
         formatter = logging.Formatter('%(asctime)s[%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
         file_handler = RotatingFileHandler(
-            log_dir_path + "/im_asset_monitor",
+            log_dir_path + "/im_asset_monitor.log",
             maxBytes=20 * 1024 * 1024,  # 最大文件大小为 20MB
             backupCount=5  # 最多保留 5 个备份文件
         )

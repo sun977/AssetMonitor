@@ -32,7 +32,6 @@ def read_from(file_path):
     data_list = [data.strip() for data in data_list]
     return data_list
 
-
 def write_to(data_list, file_path):
     data_list = data_list
     file = file_path
@@ -126,18 +125,22 @@ def run_sync_sec_data2db_from_txt():
     运行串联函数
     :return:
     """
-    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started")
-    file_path = os.path.abspath(current_abs_path_dir) + '/iptest.txt'
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.run_sync_sec_data2db_from_txt Started")
+    # file_path = os.path.abspath(current_abs_path_dir) + '/iptest.txt'   # 测试文件
+    file_path = os.path.abspath(current_abs_path_dir) + '/im_asset_ip.txt'  # 正式文件
     data_list = read_from(file_path)
-    print("读取文件列表：", data_list)
+    # print("读取文件列表：", data_list)
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Read {len(data_list)} IPs from file TXT: {data_list}")
+    write_to(data_list, out_dir_path + '/sync_im_ip.txt')  # 写入文件 本机保留一份当日同步的ip资产
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Write {len(data_list)} IPs to file/ImportantAssetOut/sync_im_ip.txt")
     data_from_sec = get_ip_from_sec(data_list)
     # 循环插入数据到数据表
     for item in data_from_sec:
         ip = item.get('ip')
-        project = item.get('project','')
+        project = item.get('project', '')
         owner = item.get('owner', '')
         insert_key_asset_ip(ip, project, owner)
-    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Finished")
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.run_sync_sec_data2db_from_txt Finished")
 
 
 
