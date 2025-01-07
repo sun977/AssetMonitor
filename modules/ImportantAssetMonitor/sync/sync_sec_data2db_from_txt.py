@@ -3,7 +3,7 @@
 """
     auth: sunhaobo
     version: v1.0
-    function: Check Important Assets
+    function: sync im_asset_ip to key_asset_ip table
     date: 2025.01.07
     note: 从 im_asset_ip.txt 文本中获取IP，根据IP同步sec平台IP数据到监控平台
 """
