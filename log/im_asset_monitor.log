@@ -1,0 +1,3 @@
+2025-01-07 18:52:29[WARNING] modules.ImportantAssetMonitor.important_asset_check.get_ip_from_db() SQL:SELECT ip, project, owner FROM key_asset_ip where start =='1' exec Failed: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=='1'' at line 1")
+2025-01-07 18:52:54[WARNING] modules.ImportantAssetMonitor.important_asset_check.get_ip_from_db() SQL:SELECT ip, project, owner FROM key_asset_ip where start = '1' exec Failed: (1054, "Unknown column 'start' in 'where clause'")
+2025-01-07 18:53:17[INFO] modules.ImportantAssetMonitor.important_asset_check.get_ip_from_db() SQL:SELECT ip, project, owner FROM key_asset_ip where status = '1' exec Success
