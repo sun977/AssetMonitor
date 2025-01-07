@@ -317,6 +317,7 @@ def get_ip_from_db():
         ip_list_db = res_sql.get('data')
     return ip_list_db
 
+
 # 所有IP的所有状态信息入库
 def insert_key_asset_ip_detail(data):
     """
@@ -325,37 +326,42 @@ def insert_key_asset_ip_detail(data):
     :return:
     """
     # data_dcit = {
-    #     "ip": ip,
-    #     "project": project,
-    #     "owner": owner,
-    #     "online_status": online_status,
-    #     "jowto_status": jowto_status,
-    #     "vuln_status": vuln_status,
-    #     "log_status": log_status,
+    #     "ipassetsIp": ip,
+    #     "ipassetsProjectName": project,
+    #     "ipassetsBusinessSystem":ipassetsBusinessSystem,  # 没加
+    #     "ipassetsOpsOperationsName": ipassetsOpsOperationsName,   # 运维人
+    #     "ipassetsStatus": ipassetsStatus,  # 在线状态
+    #     "jowtoOnlineStatus": jowtoOnlineStatus,
+    #     "ipassetsHasVul": vuln_status,
+    #     "ipassetsLogStatus": log_status,
     #     "note":note
     # }
     data_dit = data
     try:
         sql_insert = (
-            "INSERT INTO key_asset_ip_detail (ip, project, owner, online_status, jowto_status, vuln_status, log_status, note) "
-            "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') "
-            "ON DUPLICATE KEY UPDATE "
-            "ip='%s',project='%s',owner='%s',online_status='%s',jowto_status='%s',vuln_status='%s',log_status='%s', note='%s', updateTime=CURRENT_TIMESTAMP(6); ;" % (
-                data_dit.get('ip'), data_dit.get('project'), data_dit.get('owner'), data_dit.get('online_status'), data_dit.get('jowto_status'), data_dit.get('vuln_status'), data_dit.get('log_status'), data_dit.get('note'), data_dit.get('ip'), data_dit.get('project'), data_dit.get('owner'), data_dit.get('online_status'), data_dit.get('jowto_status'), data_dit.get('vuln_status'), data_dit.get('log_status'), data_dit.get('note')
-            )
+                "INSERT INTO key_asset_ip_detail (ipassetsIp, ipassetsProjectName, ipassetsOpsOperationsName, ipassetsStatus, jowtoOnlineStatus, ipassetsHasVul, ipassetsLogStatus, note) "
+                "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') "
+                "ON DUPLICATE KEY UPDATE "
+                "ipassetsIp='%s',ipassetsProjectName='%s',ipassetsOpsOperationsName='%s',ipassetsStatus='%s',jowtoOnlineStatus='%s',ipassetsHasVul='%s',ipassetsLogStatus='%s', note='%s', updateTime=CURRENT_TIMESTAMP(6); ;" % (
+                    data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'), data_dit.get('ipassetsOpsOperationsName'), data_dit.get('ipassetsStatus'),
+                    data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'), data_dit.get('ipassetsLogStatus'),
+                    data_dit.get('note'), data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'), data_dit.get('ipassetsOpsOperationsName'),
+                    data_dit.get('ipassetsStatus'), data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'),
+                    data_dit.get('ipassetsLogStatus'), data_dit.get('note')
+                )
         )
         res_sql = MySQL(sql=sql_insert).exec()
         if res_sql.get('state') == 1:
-            logger.info(f"modules.ImportantAssetMonitor.important_asset_check.insert_key_asset_ip_detail() SQL:{sql_insert} exec Success")
+            logger.info(
+                f"modules.ImportantAssetMonitor.important_asset_check.insert_key_asset_ip_detail() SQL:{sql_insert} exec Success")
         else:
-            logger.warning(f"modules.ImportantAssetMonitor.important_asset_check.insert_key_asset_ip_detail() SQL:{sql_insert} exec Failed: {res_sql.get('msg')}")
+            logger.warning(
+                f"modules.ImportantAssetMonitor.important_asset_check.insert_key_asset_ip_detail() SQL:{sql_insert} exec Failed: {res_sql.get('msg')}")
         return sql_insert
     except Exception as e:
-        logger.error(f"modules.ImportantAssetMonitor.important_asset_check.insert_key_asset_ip_detail() Failed to insert data into db: {e}")
+        logger.error(
+            f"modules.ImportantAssetMonitor.important_asset_check.insert_key_asset_ip_detail() Failed to insert data into db: {e}")
         return sql_insert
-
-
-
 
 
 # 运行函数
@@ -375,11 +381,10 @@ def run_important_asset_check():
     # 列表套列表可以直接遍历
     for item in ip_list_db:
         # print("item:", item)
-        res = check_ips_alert(item.get('ip'))  # 每个列表元素是字典，取字典的ip值
+        res = check_ips_alert(item.get('ip'))  # 每个列表元素是字典，取字典的ip值  会自动写入文件
         # print("列表结果：", res)
     print("out_print_result:", out_print_result)
     send_mail(out_print_result)
-
 
     # 获取的IP的所有状态同步资产监控表 key_asset_ip_detail
     # res = get_ips_all_status(ip_list_db)
@@ -387,15 +392,27 @@ def run_important_asset_check():
     for ite in ip_list_db:
         ip_list.append(ite.get('ip'))
 
-    res_get_ips_all_status = get_ips_all_status(ip_list)   # [{},{}]  {'ip':'','ipassets_project_name','online_status':'','jowto_status':'','vuln_status':'','log_status':'','log_status_info':''}
+    # [{},{}]  {'ip':'','ipassets_project_name':'', 'online_status':'','jowto_status':'','vuln_status':'','log_status':'','log_status_info':''}  全是 True 和 False
+    res_get_ips_all_status = get_ips_all_status(ip_list)
+
+
+    ####### 重新写下面的封装逻辑 注意各个字段的名称和取值
+    # 循环状态数据列表
     for x in res_get_ips_all_status:
-        # 需要封装一下 x 数据
+        # 修改 x 的 log_status_info 名 成 note
+        x['note'] = x.pop('log_status_info')
+        # 循环 数据库 数据列表
+        for y in ip_list_db:
+            if x.get('ip') == y.get('ip'):
+                x['project'] = y.get('project', '')   # 给 状态数据列表 project
+                x['owner'] = y.get('owner', '')       # 给 状态数据列表 owner
+
+        # 插入数据
+        insert_key_asset_ip_detail(x)
+
 
     pass
 
 
-    print("------------------------------------------------------------------------")
-
-
 if __name__ == "__main__":
-  run_important_asset_check()
+    run_important_asset_check()
