@@ -90,15 +90,58 @@ def get_ip_from_sec(iplist):
         return all_ip_info_list
 
 
+# 构造插入数据库的SQL函数
+def insert_key_asset_ip(ip, project, owner):
+    """
+    插入数据库 key_asset_ip 表
+    :param ip:
+    :param project:
+    :param owner:
+    :return:
+    """
+
+    try:
+        sql = (
+                "INSERT INTO key_asset_ip (ip, project, owner) "
+                "VALUES ('%s', '%s', '%s') "
+                "ON DUPLICATE KEY UPDATE "
+                "ip='%s',project='%s',owner='%s', updateTime=CURRENT_TIMESTAMP(6);" % (
+                    ip, project, owner, ip, project, owner,  # 所有的参数都在这里
+                )
+        )
+        # 执行SQL语句
+        result = MySQL(sql=sql).exec()
+        if result.get('state') == 1:
+            logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.insert_key_asset_ip() Inserted {ip} into key_asset_ip")
+        else:
+            logger.error(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.insert_key_asset_ip() Failed to insert {ip} into key_asset_ip: {result.get('msg')}")
+        return sql
+    except Exception as e:
+        logger.error(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.insert_key_asset_ip() Error: {e}")
+
+
+# 运行函数
+def run_sync_sec_data2db_from_txt():
+    """
+    运行串联函数
+    :return:
+    """
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started")
+    file_path = os.path.abspath(current_abs_path_dir) + '/iptest.txt'
+    data_list = read_from(file_path)
+    print("读取文件列表：", data_list)
+    data_from_sec = get_ip_from_sec(data_list)
+    # 循环插入数据到数据表
+    for item in data_from_sec:
+        ip = item.get('ip')
+        project = item.get('project','')
+        owner = item.get('owner', '')
+        insert_key_asset_ip(ip, project, owner)
+    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Finished")
 
 
 
 
 
 if __name__ == '__main__':
-    logger.info(f"modules.ImportantAssetMonitor.sync_sec_data2db_from_txt.main() Started")
-    file_path = os.path.abspath(current_abs_path_dir) + '/iptest.txt'
-    data_list = read_from(file_path)
-    print("读取文件列表：", data_list)
-    res = get_ip_from_sec(data_list)
-    print("从SEC获取的IP信息：", res)
+    run_sync_sec_data2db_from_txt()
