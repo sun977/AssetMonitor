@@ -347,12 +347,12 @@ def insert_key_asset_ip_detail(data):
                     data_dit.get('ipassetsOpsOperationsName'), data_dit.get('ipassetsStatus'),
                     data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'),
                     data_dit.get('ipassetsLogStatus'),
-                    json.dumps(data_dit['note'], ensure_ascii=False),  # note 是字典类型，需要装换成json数据
+                    str(json.dumps(data_dit['note'], ensure_ascii=False)),  # note 是字典类型，需要装换成json数据,由于cool-admin前端默认是toString(),所以转换成字符串更好
                     data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'),
                     data_dit.get('ipassetsOpsOperationsName'), data_dit.get('ipassetsStatus'),
                     data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'),
                     data_dit.get('ipassetsLogStatus'),
-                    json.dumps(data_dit['note'], ensure_ascii=False)
+                    str(json.dumps(data_dit['note'], ensure_ascii=False))
                 )
         )
         res_sql = MySQL(sql=sql_insert).exec()
