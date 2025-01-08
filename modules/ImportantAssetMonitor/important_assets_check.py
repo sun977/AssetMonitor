@@ -280,8 +280,8 @@ def send_mail(data):
     data = data
     mail = MAIL()
     subject = f'今日重保资产监控-{TODAY}'
-    # userlist = ['sunhaobo@qianxin.com']
-    userlist = ['sunhaobo@qianxin.com', 'g-sec-opr@qianxin.com']
+    userlist = ['sunhaobo@qianxin.com']
+    # userlist = ['sunhaobo@qianxin.com', 'g-sec-opr@qianxin.com']
     content = f"""
     ------ 重保数据统计数据统计 ------
 
@@ -334,7 +334,7 @@ def insert_key_asset_ip_detail(data):
     #     "jowtoOnlineStatus": jowtoOnlineStatus,
     #     "ipassetsHasVul": vuln_status,
     #     "ipassetsLogStatus": log_status,
-    #     "note":note
+    #     "note":note  note_json = json.dumps(data_dit['note'], ensure_ascii=False)
     # }
     data_dit = data
     try:
@@ -342,12 +342,17 @@ def insert_key_asset_ip_detail(data):
                 "INSERT INTO key_asset_ip_detail (ipassetsIp, ipassetsProjectName, ipassetsOpsOperationsName, ipassetsStatus, jowtoOnlineStatus, ipassetsHasVul, ipassetsLogStatus, note) "
                 "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') "
                 "ON DUPLICATE KEY UPDATE "
-                "ipassetsIp='%s',ipassetsProjectName='%s',ipassetsOpsOperationsName='%s',ipassetsStatus='%s',jowtoOnlineStatus='%s',ipassetsHasVul='%s',ipassetsLogStatus='%s', note='%s', updateTime=CURRENT_TIMESTAMP(6); ;" % (
-                    data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'), data_dit.get('ipassetsOpsOperationsName'), data_dit.get('ipassetsStatus'),
-                    data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'), data_dit.get('ipassetsLogStatus'),
-                    data_dit.get('note'), data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'), data_dit.get('ipassetsOpsOperationsName'),
-                    data_dit.get('ipassetsStatus'), data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'),
-                    data_dit.get('ipassetsLogStatus'), data_dit.get('note')
+                "ipassetsIp='%s',ipassetsProjectName='%s',ipassetsOpsOperationsName='%s',ipassetsStatus='%s',jowtoOnlineStatus='%s',ipassetsHasVul='%s',ipassetsLogStatus='%s', note='%s', updateTime=CURRENT_TIMESTAMP(6);" % (
+                    data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'),
+                    data_dit.get('ipassetsOpsOperationsName'), data_dit.get('ipassetsStatus'),
+                    data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'),
+                    data_dit.get('ipassetsLogStatus'),
+                    json.dumps(data_dit['note'], ensure_ascii=False),  # note 是字典类型，需要装换成json数据
+                    data_dit.get('ipassetsIp'), data_dit.get('ipassetsProjectName'),
+                    data_dit.get('ipassetsOpsOperationsName'), data_dit.get('ipassetsStatus'),
+                    data_dit.get('jowtoOnlineStatus'), data_dit.get('ipassetsHasVul'),
+                    data_dit.get('ipassetsLogStatus'),
+                    json.dumps(data_dit['note'], ensure_ascii=False)
                 )
         )
         res_sql = MySQL(sql=sql_insert).exec()
@@ -367,51 +372,53 @@ def insert_key_asset_ip_detail(data):
 # 运行函数
 def run_important_asset_check():
     """
-    串联运行函数
+    串联运行函数  运行函数，发送邮件，更新监控表状态
     :return:
     """
-    # 为了发邮件
-    print("------------------------------------------------------------------------")
+    # 发邮件
     # 输出一下时间，便于查询run.log日志
     print("DATE:", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     # 改为从数据库中获取IP列表
     ip_list_db = get_ip_from_db()  # [{},{}]  {'ip': '10.44.112.17', 'project': '奇安信集团- CRM系统采购及规划建设项目', 'owner': '娄卫赢'}
 
-    # 遍历情况发邮件
-    # 列表套列表可以直接遍历
-    for item in ip_list_db:
-        # print("item:", item)
-        res = check_ips_alert(item.get('ip'))  # 每个列表元素是字典，取字典的ip值  会自动写入文件
-        # print("列表结果：", res)
-    print("out_print_result:", out_print_result)
-    send_mail(out_print_result)
-
-    # 获取的IP的所有状态同步资产监控表 key_asset_ip_detail
-    # res = get_ips_all_status(ip_list_db)
     ip_list = []  # 纯IP列表['','']
     for ite in ip_list_db:
         ip_list.append(ite.get('ip'))
 
+    # 1、遍历情况发邮件
+    res = check_ips_alert(ip_list)  # 直接给参数 IP列表
+    # print("列表结果：", res)
+    # print("out_print_result:", out_print_result)
+    send_mail(out_print_result)
+
+    # 2、获取的IP的所有状态同步资产监控表 key_asset_ip_detail
     # [{},{}]  {'ip':'','ipassets_project_name':'', 'online_status':'','jowto_status':'','vuln_status':'','log_status':'','log_status_info':''}  全是 True 和 False
     res_get_ips_all_status = get_ips_all_status(ip_list)
 
+    # 重新封装 逻辑
+    # 将 ip_list_db 转换为以 IP 为键的字典
+    ip_dict = {item['ip']: item for item in ip_list_db}
 
-    ####### 重新写下面的封装逻辑 注意各个字段的名称和取值
-    # 循环状态数据列表
     for x in res_get_ips_all_status:
-        # 修改 x 的 log_status_info 名 成 note
-        x['note'] = x.pop('log_status_info')
-        # 循环 数据库 数据列表
-        for y in ip_list_db:
-            if x.get('ip') == y.get('ip'):
-                x['project'] = y.get('project', '')   # 给 状态数据列表 project
-                x['owner'] = y.get('owner', '')       # 给 状态数据列表 owner
+        ip = x.get('ip')
+        if not ip:
+            continue  # 跳过无效的 IP
 
-        # 插入数据
-        insert_key_asset_ip_detail(x)
-
-
-    pass
+        # 查找对应的 IP 信息
+        db_info = ip_dict.get(ip)
+        if db_info:
+            z = {
+                'ipassetsIp': x.get('ip', ''),
+                'ipassetsProjectName': db_info.get('project', ''),
+                'ipassetsOpsOperationsName': db_info.get('owner', ''),
+                'ipassetsStatus': x.get('online_status', ''),
+                'jowtoOnlineStatus': x.get('jowto_status', ''),
+                'ipassetsHasVul': x.get('vuln_status', ''),
+                'ipassetsLogStatus': x.get('log_status', ''),
+                'note': x.get('log_status_info', '')
+            }
+            # print("z:", z)
+            insert_key_asset_ip_detail(z)
 
 
 if __name__ == "__main__":
