@@ -280,10 +280,10 @@ def send_mail(data):
     data = data
     mail = MAIL()
     subject = f'今日重保资产监控-{TODAY}'
-    userlist = ['sunhaobo@qianxin.com']
-    # userlist = ['sunhaobo@qianxin.com', 'g-sec-opr@qianxin.com']
+    # userlist = ['sunhaobo@qianxin.com']
+    userlist = ['sunhaobo@qianxin.com', 'g-sec-opr@qianxin.com']
     content = f"""
-    ------ 重保数据统计数据统计 ------
+    ------ 重保资产检测报告 ------
 
     日期：{TODAY}
 
