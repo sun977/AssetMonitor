@@ -24,6 +24,7 @@ from comm.mysql import *
 from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
 import os
 from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db, get_domain_from_sec
+import fnmatch  # 用于支持通配符匹配域名
 
 # current_abs_path = os.path.abspath(__file__)  # 当前文件位置
 # current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
@@ -148,7 +149,7 @@ def get_records(domain, record_type):
 # 域名过滤白名单函数
 def filter_domains(domains):
     """
-    过滤域名白名单，不支持通配符类型的域名
+    过滤域名白名单，支持通配符类型的域名
     减少查询次数，查一次表把白名单都都取出来
     返回域名列表 = 所有域名 - 白名单域名
     :param domains: 需要过白名单的域名列表
@@ -167,8 +168,15 @@ def filter_domains(domains):
         logger.error(f"Failed to get whitelist from database: {res.get('msg')}")
     # print("whitelist:", whitelist)
 
+    # 使用 fnmatch.filter 进行通配符匹配
+    filtered_domains = []
+    for domain in domains:
+        if not any(fnmatch.fnmatch(domain, pattern) for pattern in whitelist):
+            filtered_domains.append(domain)
+
     # 返回不在白名单里面的域名
-    return [domain for domain in domains if domain not in whitelist]
+    # return [domain for domain in domains if domain not in whitelist]
+    return filtered_domains
 
 
 # 获取sec域名的域名解析并入库
@@ -236,10 +244,10 @@ def run_domain_asset_analysis():
 
 
 if __name__ == '__main__':
-    run_domain_asset_analysis()
-    # domains = ['example.com', 'example.net']
-    # res = filter_domains(domains)
-    # print("res:", res)
+    # run_domain_asset_analysis()
+    domains = ['example.com', 'example.net', 'whw3ylsyzrrzbdne111111.o.xhaoma.net']  # 加白表添加： *.xhaoma.net
+    res = filter_domains(domains)
+    print("res:", res)   # res: ['example.net']  成功过滤
     # sync_domain_from_sec2db()
     # res = get_all_domains_from_db()
     # print("get_all_domains_from_db:", res)
