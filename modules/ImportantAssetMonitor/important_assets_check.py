@@ -137,10 +137,10 @@ class Manager:
 # 业务逻辑函数
 # 获取IPs的所有状态
 def get_ips_all_status(ip_list):
-    '''
+    """
     :param: ip list
     :return: 封装IP所有查询的信息 [{},{}]
-    '''
+    """
     # 初始化类
     M = Manager()
     # 写一个变量存储查询结果
@@ -184,8 +184,10 @@ def get_ips_all_status(ip_list):
 
 # 检测IP的状态告警
 def check_ips_alert(ip_list):
-    """"
-    逐步检查
+    """
+    根据ip列表，逐步检查每个IP的状态
+    :param ip_list:
+    :return:
     """
     result_list = get_ips_all_status(ip_list)  # 获取IPs的所有状态
     # print("result_list:", result_list)
@@ -196,7 +198,8 @@ def check_ips_alert(ip_list):
     for data in result_list:  # 遍历数据
         # print("数据：", data)
         if data['online_status'] == False:
-            print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, '不在线')
+            logger.info({"ip_tmp": data['ip'], "project": data['ipassets_project_name'], "msg": data['online_status']})
+            # print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, '不在线')
             # write_something_to({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": data['online_status']}, os.path.join(out_file, "out_print.txt"))
             out_print_result.append({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": '资产不在线'})
             tmp_dict = {
@@ -211,7 +214,8 @@ def check_ips_alert(ip_list):
             ip_unonline_list.append(tmp_dict)
         else:
             if data['jowto_status'] == False:
-                print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, 'jowto 不在线')
+                logger.info({"ip_tmp": data['ip'], "project": data['ipassets_project_name'], "msg": data['jowto_status']})
+                # print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, 'jowto 不在线')
                 # write_something_to({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": data['jowto_status']}, os.path.join(out_file, "out_print.txt"))
                 out_print_result.append(
                     {"ip": data['ip'], "project": data['ipassets_project_name'], "msg": 'jowto 不在线'})
@@ -226,7 +230,8 @@ def check_ips_alert(ip_list):
                 }
                 ip_nojowto_list.append(tmp_dict)
                 if data['vuln_status'] == False:  # True 是没有漏洞 False 是有漏洞
-                    print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, '存在漏洞')
+                    logger.info({"ip_tmp": data['ip'], "project": data['ipassets_project_name'], "msg": data['vuln_status']})
+                    # print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, '存在漏洞')
                     # write_something_to({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": data['vuln_status']}, os.path.join(out_file, "out_print.txt"))
                     out_print_result.append({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": '存在漏洞'})
                     tmp_dict = {
@@ -240,7 +245,8 @@ def check_ips_alert(ip_list):
                     }
                     ip_hasvuln_list.append(tmp_dict)
                     if data['log_status'] == False:
-                        print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, '日志状态不正常')
+                        logger.info({"ip_tmp": data['ip'], "project": data['ipassets_project_name'], "msg": data['log_status']})
+                        # print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, '日志状态不正常')
                         # write_something_to({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": data['log_status']}, os.path.join(out_file, "out_print.txt"))
                         out_print_result.append(
                             {"ip": data['ip'], "project": data['ipassets_project_name'], "msg": '日志状态不正常'})
@@ -257,9 +263,9 @@ def check_ips_alert(ip_list):
                         # 取出日志信息数据，判断每个键值的值是 否 输出键值名
                         for key, value in data['log_status_info'].items():
                             if value == '否':
-                                print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, key, '否')
-                                out_print_result.append({"ip": data['ip'], "project": data['ipassets_project_name'],
-                                                         "msg": '缺失' + key + '日志'})
+                                logger.info({"ip_tmp": data['ip'], "project": data['ipassets_project_name'], "msg": '缺失' + key + '日志'})
+                                # print({"ip_tmp": data['ip'], "project": data['ipassets_project_name']}, key, '否')
+                                out_print_result.append({"ip": data['ip'], "project": data['ipassets_project_name'], "msg": '缺失' + key + '日志'})
 
     # # 写入文件
     write_to(ip_unonline_list, os.path.join(out_dir_path, "ip_unonline_list.txt"))
@@ -296,6 +302,7 @@ def send_mail(data):
         消息：{it['msg']}   
     """
     mail.send_mail(subject, userlist, content)
+    logger.info(f"modules.ImportantAssetMonitor.important_asset_check.send_mail() send_mail Success")
 
 
 # 从数据库中获取IP列表
@@ -377,7 +384,8 @@ def run_important_asset_check():
     """
     # 发邮件
     # 输出一下时间，便于查询run.log日志
-    print("DATE:", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    # print("DATE:", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    logger.info(f"modules.ImportantAssetMonitor.important_asset_check.run_important_asset_check() run_important_asset_check Start")
     # 改为从数据库中获取IP列表
     ip_list_db = get_ip_from_db()  # [{},{}]  {'ip': '10.44.112.17', 'project': '奇安信集团- CRM系统采购及规划建设项目', 'owner': '娄卫赢'}
 
@@ -419,6 +427,7 @@ def run_important_asset_check():
             }
             # print("z:", z)
             insert_key_asset_ip_detail(z)
+    logger.info(f"modules.ImportantAssetMonitor.important_asset_check.run_important_asset_check() run_important_asset_check Finished")
 
 
 if __name__ == "__main__":
