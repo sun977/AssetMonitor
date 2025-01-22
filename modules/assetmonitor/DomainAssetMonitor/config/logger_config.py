@@ -5,7 +5,7 @@
     auth: sunhaobo
     version: v1.0
     function: 统一的日志输出配置文件 适用模块 DomainAssetMonitor
-    date: 2024.12.24
+    date: 2025.01.22
     note:
         1、引入
         2、logger = setup_logger() 初始化
@@ -19,7 +19,7 @@ import os
 def setup_logger():
     current_abs_path = os.path.abspath(__file__)
     current_abs_path_dir = os.path.dirname(current_abs_path)
-    log_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../log/'
+    log_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../../log/'   # 20250122 目录归档，又添加了一级目录
 
     # 确保日志目录存在
     if not os.path.exists(log_dir_path):

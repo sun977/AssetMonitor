@@ -11,7 +11,7 @@
 
 from modules.SecAPI.sec.getSecApiClient import *
 from comm.mysql import *
-from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
+from modules.assetmonitor.DomainAssetMonitor.config.logger_config import setup_logger
 
 # 配置日志记录器
 logger = setup_logger()

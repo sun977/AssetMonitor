@@ -18,12 +18,10 @@
 """
 
 # 引用SEC接口
-from modules.SecAPI.sec.getSecApiClient import *
 import dns.resolver
 from comm.mysql import *
-from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
-import os
-from modules.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db, get_domain_from_sec
+from modules.assetmonitor.DomainAssetMonitor.sync.sync_sec_data2db import sync_domain_from_sec2db
+from modules.assetmonitor.DomainAssetMonitor.config.logger_config import setup_logger
 import fnmatch  # 用于支持通配符匹配域名
 
 # current_abs_path = os.path.abspath(__file__)  # 当前文件位置
@@ -244,10 +242,10 @@ def run_domain_asset_analysis():
 
 
 if __name__ == '__main__':
-    # run_domain_asset_analysis()
-    domains = ['example.com', 'example.net', 'whw3ylsyzrrzbdne111111.o.xhaoma.net']  # 加白表添加： *.xhaoma.net
-    res = filter_domains(domains)
-    print("res:", res)   # res: ['example.net']  成功过滤
+    run_domain_asset_analysis()
+    # domains = ['example.com', 'example.net', 'whw3ylsyzrrzbdne111111.o.xhaoma.net']  # 加白表添加： *.xhaoma.net
+    # res = filter_domains(domains)
+    # print("res:", res)   # res: ['example.net']  成功过滤
     # sync_domain_from_sec2db()
     # res = get_all_domains_from_db()
     # print("get_all_domains_from_db:", res)

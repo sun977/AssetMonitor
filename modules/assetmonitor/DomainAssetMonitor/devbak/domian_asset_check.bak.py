@@ -19,30 +19,11 @@
         5. 域名监控表删除 14 天前的数据
 """
 
-from datetime import datetime, time
 from comm.mysql import *
-from modules.DomainAssetMonitor.config.logger_config import *  # 引入日志配置
-from modules.DomainAssetMonitor.sync.sync_sec_data2db import get_domain_from_sec
-from comm.send_mail import *
-import os
-
-current_abs_path = os.path.abspath(__file__)  # 当前文件位置
-current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
-out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../file/DomainAssetOut/'  # 从当前目录找到输出文件的位置
+from modules.assetmonitor.DomainAssetMonitor.sync.sync_sec_data2db import get_domain_from_sec
 
 # 配置日志记录器
 logger = setup_logger()
-
-
-# 写入文件函数
-def write_to(data_list, file_path):
-    data_list = data_list
-    file = file_path
-    # 打开out.txt文件
-    with open(file, 'w') as f:
-        # 写入list数据
-        for data in data_list:
-            f.write(str(data) + '\n')
 
 
 # 判断域名是否是内网域名 【完成】
@@ -150,6 +131,17 @@ def new_add_domains():
         logger.error(f"modules.DomainAssetMonitor.domian_asset_check.new_add_domains() Failed to compare domains: {e}")
 
     return newAddDomains
+
+
+# 新增域名邮件发送
+def send_new_add_domains_email(newAddDomainsList):
+    """
+
+    :param newAddDomainsList: [{'domain': 'imsa.comisys.net', 'owner': '党羽'}]
+    :return:
+    """
+
+    pass
 
 
 # 失效域名检测  【完成】  在 asset_dns_origin 表，不在 asset_dns_records 表
@@ -328,7 +320,7 @@ def check_white_domains_insert_db():
     检查 asset_dns_white 表中加白域名
     落表 asset_dns
     :param:     domain / owner / email
-    :return:    [{},{}] domain / domainType / isWhite / note
+    :return:    domain / domainType / isWhite / note
     """
     whiteDomains = []
     try:
@@ -409,68 +401,6 @@ def delete_old_data():
     return
 
 
-# 新增域名邮件发送
-def send_new_add_domains_email(datadict):
-    """
-    1.有效域名总数
-    2.当天新增域名个数 和 新增域名
-    3.同步加白域名个数
-    4.过期域名个数
-    5.失效域名个数
-    6.删除过期域名个数
-    :param newAddDomainsList:
-    {
-        'allDomains':{
-            'count':'',
-            'data':''
-        },
-        'newAddDomains':{
-            'count':'',
-            'data':''
-        },
-        'syncWhiteDomains':{
-            'count':'',
-            'data':''
-        },
-        'expiredDomains':{
-            'count':'',
-            'data':''
-        },
-        'invalidDomains':{
-            'count':'',
-            'data':''
-        }
-    }
-    :return:
-    """
-    TODAY = datetime.now().strftime("%Y-%m-%d")
-    TIMENEW = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    data = datadict
-    mail = MAIL()
-    mail.send_mail_html(
-        subject=f"域名资产检测报告-{TODAY}",
-        userlist=["sunhaobo@qianxin.com", 'g-sec-opr@qianxin.com'],
-        # userlist=["sunhaobo@qianxin.com"],
-        contenthtml=f"""
-        <div>
-            <p>------ 域名资产检测报告 ------</p>
-            <p>日期：{TIMENEW}</p>
-            <p>SEC域名总数：{data.get('allDomains').get('count')}</p>
-            <p>当天新增域名个数：{data.get('newAddDomains').get('count')}</p>
-            <p>同步加白域名个数：{data.get('syncWhiteDomains').get('count')}</p>      
-            <p>过期域名个数：{data.get('expiredDomains').get('count')}</p>
-            <p>失效域名个数：{data.get('invalidDomains').get('count')}</p>
-            <p>当天新增域名列表：</p>
-            <ul>
-                {data.get('newAddDomains').get('data')}
-            </ul>
-        </div>
-        """
-    )
-    logger.info(
-        f"modules.DomainAssetMonitor.domian_asset_check.send_new_add_domains_email() Sent check result email")
-
-
 # 运行函数
 def run_domain_asset_check():
     """
@@ -482,67 +412,25 @@ def run_domain_asset_check():
     5.域名和IP是否CDN监控(未完成)
     6.删除旧数据（14天前旧数据删除） 原始域名表：asset_dns_origin / 域名解析表：asset_dns_record / 域名监控表：asset_dns
     """
-
-    data = {
-        'allDomains': {
-            'count': 0,
-            'data': []
-        },
-        'newAddDomains': {
-            'count': 0,
-            'data': []
-        },
-        'syncWhiteDomains': {
-            'count': 0,
-            'data': []
-        },
-        'expiredDomains': {
-            'count': 0,
-            'data': []
-        },
-        'invalidDomains': {
-            'count': 0,
-            'data': []
-        }
-    }
-
     try:
         logger.info("Starting domain_asset_check.py script")
+        # # 新增域名检测
+        newAddDomains = new_add_domains()
 
-        # 获取所有域名
-        logger.info("Running function get_domain_from_db()")
-        domainsOriginList = select_data_from_db("SELECT domain FROM asset_dns_origin", "domain")
-        data['allDomains'] = {
-            'count': len(domainsOriginList),
-            'data': domainsOriginList
-        }
-        logger.info("Finish function get_domain_from_db()")
-
-        # # 新增域名检测 【0 个】
-        logger.info("Running function new_add_domains()")
-        data['newAddDomains']['data'] = new_add_domains()
-        data['newAddDomains']['count'] = len(data['newAddDomains']['data'])
-        logger.info("Finish function new_add_domains()")
-
-        # 同步域名加白表 【3 个】
+        # 同步域名加白表
         logger.info("Running function check_white_domains_insert_db()")
-        data['syncWhiteDomains']['data'] = check_white_domains_insert_db()
-        data['syncWhiteDomains']['count'] = len(data['syncWhiteDomains']['data'])
+        check_white_domains_insert_db()
         logger.info("Finish function check_white_domains_insert_db()")
 
-        # 检查域名是否过期 【2000 个 】
+        # 检查域名是否过期
         logger.info("Running function check_expired_domains() and insert_expired_domains()")
-        expiredDomainsList = check_expired_domains()  # 检查域名是否过期  已经去过重
-        data['expiredDomains']['data'] = expiredDomainsList
-        data['expiredDomains']['count'] = len(expiredDomainsList)
+        expiredDomainsList = check_expired_domains()  # 检查域名是否过期
         insert_expired_domains(expiredDomainsList)  # 插入过期域名入表 asset_dns 可返回 插入域名列表
         logger.info("Finish function check_expired_domains() and insert_expired_domains()")
 
-        # 检查域名是否失效  【大概 200 个】
+        # 检查域名是否失效
         logger.info("Running function check_invalid_domains() and insert_invalid_domains()")
         invalidDomainsList = check_invalid_domains()  # 检查域名是否失效
-        data['invalidDomains']['data'] = invalidDomainsList
-        data['invalidDomains']['count'] = len(invalidDomainsList)
         insert_invalid_domains(invalidDomainsList)  # 插入失效域名入表 asset_dns 可返回 插入域名列表
         logger.info("Finish function check_invalid_domains() and insert_invalid_domains()")
 
@@ -550,22 +438,6 @@ def run_domain_asset_check():
         logger.info("Running function delete_old_data()")
         delete_old_data()
         logger.info("Finish function delete_old_data()")
-
-        # 统计数据发送邮件
-        logger.info("Running function send_new_add_domains_email()")
-        send_new_add_domains_email(data)
-        logger.info("Finish function send_new_add_domains_email()")
-
-        # 详细数据可以写入文
-        print("PATH:", os.path.join(out_dir_path, "allDomains.txt"))
-        logger.info(f"OUT PATH:, {os.path.join(out_dir_path,'allDomains.txt')}")
-        # write_to(data.get('allDomains').get('data'), os.path.normpath(os.path.join(out_dir_path, "allDomains.txt")))
-        write_to(data.get('allDomains').get('data'), os.path.join(out_dir_path, "allDomains.txt"))
-        write_to(data.get('newAddDomains').get('data'), os.path.join(out_dir_path, "newAddDomains.txt"))
-        write_to(data.get('syncWhiteDomains').get('data'), os.path.join(out_dir_path, "syncWhiteDomains.txt"))
-        write_to(data.get('expiredDomains').get('data'), os.path.join(out_dir_path, "expiredDomains.txt"))
-        write_to(data.get('invalidDomains').get('data'), os.path.join(out_dir_path, "invalidDomains.txt"))
-
 
     except Exception as e:
         logger.error(

@@ -17,8 +17,8 @@
 
 """
 
-from modules.DomainAssetMonitor.domain_asset_analysis import run_domain_asset_analysis
-from modules.DomainAssetMonitor.domain_asset_check import run_domain_asset_check
+from modules.assetmonitor.DomainAssetMonitor.domain_asset_analysis import run_domain_asset_analysis
+from modules.assetmonitor.DomainAssetMonitor.domain_asset_check import run_domain_asset_check
 
 ## 方式一
 # pip install schedule
