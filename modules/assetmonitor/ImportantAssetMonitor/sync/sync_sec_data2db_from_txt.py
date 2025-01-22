@@ -8,15 +8,13 @@
     note: 从 im_asset_ip.txt 文本中获取IP，根据IP同步sec平台IP数据到监控平台
 """
 
-from modules.ImportantAssetMonitor.config.logger_config import setup_logger
-import os
-from datetime import datetime, time
+from modules.assetmonitor.ImportantAssetMonitor.config.logger_config import setup_logger
 from comm.mysql import *
 from modules.SecAPI.sec.getSecApiClient import *
 
 current_abs_path = os.path.abspath(__file__)  # 当前文件位置
 current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
-out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../file/ImportantAssetOut/'  # 从当前目录找到输出文件的位置
+out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../../file/ImportantAssetOut/'  # 从当前目录找到输出文件的位置
 
 
 # 配置日志记录器

@@ -18,15 +18,15 @@
         3.需要维护重保资产的 list
 """
 from modules.SecAPI.sec.getSecApiClient import *
-from datetime import time, datetime
+from datetime import datetime
 from comm.send_mail import *
 from comm.mysql import *
-from modules.ImportantAssetMonitor.config.logger_config import setup_logger
+from modules.assetmonitor.ImportantAssetMonitor.config.logger_config import setup_logger
 
 # 全局变量
 current_abs_path = os.path.abspath(__file__)  # 当前文件位置
 current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
-out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../file/ImportantAssetOut/'  # 从当前目录找到输出文件的位置
+out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../file/ImportantAssetOut/'  # 从当前目录找到输出文件的位置
 out_print_result = []  # 用于发送邮件的数据列表
 
 # 配置日志记录器

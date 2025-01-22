@@ -7,8 +7,7 @@
     date: 2025.01.07
     note: 调用脚本（临时）
 """
-from modules.ImportantAssetMonitor.important_assets_check import run_important_asset_check
-from modules.ImportantAssetMonitor.sync.sync_sec_data2db_from_txt import run_sync_sec_data2db_from_txt
+from modules.assetmonitor.ImportantAssetMonitor.important_assets_check import run_important_asset_check
 
 if __name__ == '__main__':
     # 从 文件 里 读取 ip , 并获取SEC IP 数据入表 【不用长期执行，只用做批量导入新的监控数据时候 文件:modules/ImportantAssetMonitor/sync/im_asset_ip.txt 】

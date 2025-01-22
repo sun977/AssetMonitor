@@ -20,7 +20,7 @@ import os
 def setup_logger():
     current_abs_path = os.path.abspath(__file__)
     current_abs_path_dir = os.path.dirname(current_abs_path)
-    log_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../log/'
+    log_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../../log/'
 
     # 确保日志目录存在
     if not os.path.exists(log_dir_path):
