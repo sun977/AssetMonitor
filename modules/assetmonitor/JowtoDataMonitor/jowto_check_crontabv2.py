@@ -17,9 +17,12 @@
 """
 from datetime import time, datetime
 from netaddr import IPNetwork, IPAddress
-from sec.getSecApiClient import *
-from tools.send_mail import *
-from tools.mysql import *
+# from sec.getSecApiClient import *
+# from tools.send_mail import *
+# from tools.mysql import *
+from comm.send_mail import *
+from comm.mysql import *
+from modules.SecAPI.sec.getSecApiClient import *
 
 
 def read_from(file_path):

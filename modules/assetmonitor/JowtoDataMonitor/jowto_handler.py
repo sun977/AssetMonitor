@@ -13,9 +13,10 @@
 """
 from datetime import time, datetime
 from netaddr import IPNetwork, IPAddress
-from sec.getSecApiClient import *
-from tools.send_mail import *
-
+# from sec.getSecApiClient import *
+from modules.SecAPI.sec.getSecApiClient import *
+# from tools.send_mail import *
+from comm.send_mail import *
 
 def read_from(file_path):
     file = file_path
