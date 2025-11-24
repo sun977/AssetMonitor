@@ -23,6 +23,10 @@ from netaddr import IPNetwork, IPAddress
 from comm.send_mail import *
 from comm.mysql import *
 from modules.SecAPI.sec.getSecApiClient import *
+from modules.assetmonitor.JowtoDataMonitor.config.logger_config import setup_logger
+
+# 配置日志记录器
+logger = setup_logger()
 
 
 def read_from(file_path):
@@ -46,10 +50,10 @@ def write_to(data_list, file_path):
 
 class jowtoDataCount:
     def __init__(self):
-        self.cur_path = os.path.dirname(os.path.realpath(__file__))
-        self.network_file = os.path.join(self.cur_path, "./file/IDC_network.txt")
+        self.cur_path = os.path.dirname(os.path.realpath(__file__))    # 当前目录
+        self.network_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/IDC_network.txt")
         # self.out_file = os.path.join(self.cur_path, "./file/businessSystem/")  # 文件输出
-        self.out_file = os.path.join(self.cur_path, "./file/")  # 文件输出 --- 20241203
+        self.out_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/")  # 文件输出 --- 20251124
         self.secClient = secApiClient()  # 初始化SEC API实例
         self.sec_data_count = None  # sec设备数据总量
         self.device_online_count = None  # sec在线设备总量
@@ -1044,12 +1048,28 @@ class jowtoDataCount:
             print(f"数据写入数据库失败: {e}")
             return False
 
+def run_jowto_data_count():
+    try:
+        logger.info("Starting jowto_data_count.py")
+        jowto = jowtoDataCount()
+
+        logger.info("Starting send mails to group")
+        jowto.send_mail()  # 发送详细数据 给我自己
+        jowto.send_mail_v2()  # 发送统计数据 给我自己和运维组
+
+        logger.info("Starting write count to db")
+        jowto.write_count_2_db()  # 写入数据库
+    except Exception as e:
+        logger.error(f"modules.JowtoDataMonitor.jowto_check_crontabv2.run_jowto_data_count() error: {e}")
+
+
 
 if __name__ == '__main__':
-    jowto = jowtoDataCount()
-    jowto.send_mail()           # 发送详细数据 给我自己
-    jowto.send_mail_v2()        # 发送统计数据 给我自己和运维组
-    jowto.write_count_2_db()    # 写入数据库
+    # jowto = jowtoDataCount()
+    # jowto.send_mail()           # 发送详细数据 给我自己
+    # jowto.send_mail_v2()        # 发送统计数据 给我自己和运维组
+    # jowto.write_count_2_db()    # 写入数据库
+    run_jowto_data_count()
 
     # jowto.get_14_businessSystemCount()
     # query = 'ipassets_ip:"211.95.50.188"'

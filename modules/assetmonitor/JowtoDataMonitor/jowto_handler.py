@@ -40,8 +40,8 @@ def write_to(data_list, file_path):
 class jowtoDataCount:
     def __init__(self):
         self.cur_path = os.path.dirname(os.path.realpath(__file__))
-        self.network_file = os.path.join(self.cur_path, "./file/IDC_network.txt")
-        self.out_file = os.path.join(self.cur_path, "./file/")  # 文件输出
+        self.network_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/IDC_network.txt")
+        self.out_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/")  # 文件输出
         self.secClient = secApiClient()  # 初始化SEC API实例
         self.sec_data_count = None  # sec设备数据总量
         self.device_online_count = None  # sec在线设备总量
