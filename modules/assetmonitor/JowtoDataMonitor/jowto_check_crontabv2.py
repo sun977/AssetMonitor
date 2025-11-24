@@ -25,6 +25,11 @@ from comm.mysql import *
 from modules.SecAPI.sec.getSecApiClient import *
 from modules.assetmonitor.JowtoDataMonitor.config.logger_config import setup_logger
 
+# 全局变量
+current_abs_path = os.path.abspath(__file__)  # 当前文件位置
+current_abs_path_dir = os.path.dirname(current_abs_path)  # 当前目录
+out_dir_path = os.path.abspath(current_abs_path_dir) + '/../../../file/JowtoDataOut/'  # 从当前目录找到输出文件的位置
+
 # 配置日志记录器
 logger = setup_logger()
 
@@ -54,10 +59,13 @@ def write_to(data_list, file_path):
 
 class jowtoDataCount:
     def __init__(self):
-        self.cur_path = os.path.dirname(os.path.realpath(__file__))    # 当前目录
-        self.network_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/IDC_network.txt")
+        # self.cur_path = os.path.dirname(os.path.realpath(__file__))    # 当前目录
+        self.cur_path = current_abs_path_dir
+        # self.network_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/IDC_network.txt")
+        self.network_file = out_dir_path + "IDC_network.txt"
         # self.out_file = os.path.join(self.cur_path, "./file/businessSystem/")  # 文件输出
-        self.out_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/")  # 文件输出 --- 20251124
+        # self.out_file = os.path.join(self.cur_path, "/../../../file/JowtoDataOut/")  # 文件输出 --- 20251124
+        self.out_file = out_dir_path
         self.secClient = secApiClient()  # 初始化SEC API实例
         self.sec_data_count = None  # sec设备数据总量
         self.device_online_count = None  # sec在线设备总量
