@@ -91,7 +91,8 @@ class jowtoDataCount:
         # secClient = secApiClient()  # 初始化实例
         res = self.secClient.get_all_ipInformation()
         self.sec_data_count = len(res)
-        print("SEC数据总量:", self.sec_data_count)
+        # print("SEC数据总量:", self.sec_data_count)
+        logger.info("SEC数据总量: %s", self.sec_data_count)
         return {
             "data": res,
             "count": self.sec_data_count
@@ -118,7 +119,8 @@ class jowtoDataCount:
                     item['ipassets_least_network_tags']):
                 device_online_list.append(item)
         self.device_online_count = len(device_online_list)
-        print("SEC设备在线总量:", self.device_online_count)
+        # print("SEC设备在线总量:", self.device_online_count)
+        logger.info("SEC设备在线总量: %s", self.device_online_count)
         return {
             "data": device_online_list,  # [{},{},{}]
             "count": self.device_online_count
@@ -273,14 +275,15 @@ class jowtoDataCount:
         write_to(Area_jt_ip['S4'][2], os.path.join(self.out_file, "businessSystem/businessSystem14_ip_jowto_uninstall_S4.txt"))
         write_to(Area_jt_ip['S5'][2], os.path.join(self.out_file, "businessSystem/businessSystem14_ip_jowto_uninstall_S5.txt"))
 
-        print("14大业务系统总量:", businessSystem_ip_list_count)
-        print("14大业务系统椒图在线:{} 在线率:{:.2f}".format(jowto_online_ip_list_conut,(jowto_online_ip_list_conut/businessSystem_ip_list_count)*100),"%")
-        print("14大业务系统椒图离线:{} 离线率:{:.2f}".format(jowto_offline_ip_list_count,(jowto_offline_ip_list_count/businessSystem_ip_list_count)*100),"%")
-        print("14大业务系统椒图未安装:{} 未安装率:{:.2f}".format(jowto_uninstall_ip_list_count,(jowto_uninstall_ip_list_count/businessSystem_ip_list_count)*100),"%")
-        print("14大业务系统椒图在线统计: {} 安全域分布: S1:{}, S2:{}, S3:{}, S4:{}, S5:{} ".format( jowto_online_ip_list_conut, s1_0, s2_0, s3_0, s4_0, s5_0))
-        print("14大业务系统椒图离线统计: {} 安全域分布: S1: {}, S2:{}, S3:{}, S4:{}, S5:{} ".format(jowto_offline_ip_list_count, s1_1, s2_1, s3_1, s4_1, s5_1))
-        print("14大业务系统椒图未安装统计: {} 安全域分布: S1: {}, S2:{}, S3:{}, S4:{}, S5:{} ".format(jowto_uninstall_ip_list_count, s1_2, s2_2, s3_2, s4_2, s5_2))
-        print("文件导出:(businessSystem14_ip.*):", self.out_file)
+        # print("14大业务系统总量:", businessSystem_ip_list_count)
+        logger.info("14大业务系统总量: %s", businessSystem_ip_list_count)
+        logger.info("14大业务系统椒图在线: %s 在线率: %.2f%%", jowto_online_ip_list_conut, (jowto_online_ip_list_conut/businessSystem_ip_list_count)*100)
+        logger.info("14大业务系统椒图离线: %s 离线率: %.2f%%", jowto_offline_ip_list_count, (jowto_offline_ip_list_count/businessSystem_ip_list_count)*100)
+        logger.info("14大业务系统椒图未安装: %s 未安装率: %.2f%%", jowto_uninstall_ip_list_count, (jowto_uninstall_ip_list_count/businessSystem_ip_list_count)*100)
+        logger.info("14大业务系统椒图在线统计: %s 安全域分布: S1:%s, S2:%s, S3:%s, S4:%s, S5:%s ", jowto_online_ip_list_conut, s1_0, s2_0, s3_0, s4_0, s5_0)
+        logger.info("14大业务系统椒图离线统计: %s 安全域分布: S1: %s, S2:%s, S3:%s, S4:%s, S5:%s ", jowto_offline_ip_list_count, s1_1, s2_1, s3_1, s4_1, s5_1)
+        logger.info("14大业务系统椒图未安装统计: %s 安全域分布: S1: %s, S2:%s, S3:%s, S4:%s, S5:%s ", jowto_uninstall_ip_list_count, s1_2, s2_2, s3_2, s4_2, s5_2)
+        logger.info("文件导出:(businessSystem14_ip.*): %s", self.out_file)
 
         return {
             "data":{
@@ -392,11 +395,12 @@ class jowtoDataCount:
         # no_install_per = ((int(res_luc_need_jowto_no_install['count'])/int(res_luc_need_jowto['count']))*100)
 
         # 打印结果
-        print(f"椒图需要安装设备总量:{total_need_jowto}")
-        print(f"椒图需要安装设备在线:{online_need_jowto} 在线率:{online_per:.2f}%")
-        print(f"椒图需要安装设备离线:{offline_need_jowto} 离线率:{offline_per:.2f}%")
-        print(f"椒图需要安装设备已安装:{online_need_jowto + offline_need_jowto} 安装率:{install_per:.2f}%")
-        print(f"椒图需要安装设备未安装:{no_install_need_jowto} 未安装率:{no_install_per:.2f}%")
+        # print(f"椒图需要安装设备总量:{total_need_jowto}")
+        logger.info(f"椒图需要安装设备总量:{total_need_jowto}")
+        logger.info(f"椒图需要安装设备在线:{online_need_jowto} 在线率:{online_per:.2f}%")
+        logger.info(f"椒图需要安装设备离线:{offline_need_jowto} 离线率:{offline_per:.2f}%")
+        logger.info(f"椒图需要安装设备已安装:{online_need_jowto + offline_need_jowto} 安装率:{install_per:.2f}%")
+        logger.info(f"椒图需要安装设备未安装:{no_install_need_jowto} 未安装率:{no_install_per:.2f}%")
 
         # print("椒图需要安装设备总量:{}".format(res_luc_need_jowto['count']))
         # print("椒图需要安装设备在线:{} 在线率:{:.2f}".format(res_luc_need_jowto_online['count'], online_per), "%")
@@ -476,6 +480,7 @@ class jowtoDataCount:
         hand_res_luc_need_jowto_expose_public_no_install = []  # 未安装
         filter_items(res_luc_need_jowto_expose_public_no_install['data'], hand_res_luc_need_jowto_expose_public_no_install)
         # print("过滤后的椒图未安装item：", hand_res_luc_need_jowto_expose_public_no_install)
+        # logger.info("过滤后的椒图未安装item：", hand_res_luc_need_jowto_expose_public_no_install)
 
         # xxx / 需要安装的IP总数
         ## 计算各部分的长度(个数)
@@ -517,11 +522,12 @@ class jowtoDataCount:
         no_install_rate = (no_install_devices / total_devices) * 100 if total_devices > 0 else 0
 
         # 打印结果
-        print(f"互联网侧椒图需要安装设备总量: {total_devices}")
-        print(f"互联网侧椒图需要安装设备在线: {online_devices} 在线率: {online_per:.2f}%")
-        print(f"互联网侧椒图需要安装设备离线: {offline_devices} 离线率: {offline_per:.2f}%")
-        print(f"互联网侧椒图需要安装设备已安装: {install_devices} 安装率: {install_rate:.2f}%")
-        print(f"互联网侧椒图需要安装设备未安装: {no_install_devices} 未安装率: {no_install_rate:.2f}%")
+        # print(f"互联网侧椒图需要安装设备总量: {total_devices}")
+        logger.info(f"互联网侧椒图需要安装设备总量: {total_devices}")
+        logger.info(f"互联网侧椒图需要安装设备在线: {online_devices} 在线率: {online_per:.2f}%")
+        logger.info(f"互联网侧椒图需要安装设备离线: {offline_devices} 离线率: {offline_per:.2f}%")
+        logger.info(f"互联网侧椒图需要安装设备已安装: {install_devices} 安装率: {install_rate:.2f}%")
+        logger.info(f"互联网侧椒图需要安装设备未安装: {no_install_devices} 未安装率: {no_install_rate:.2f}%")
 
 
         # print("互联网侧椒图需要安装设备总量:{}".format(res_luc_need_jowto_expose_public['count']))
@@ -718,16 +724,16 @@ class jowtoDataCount:
         s3_install_per = calculate_percentage(len_s3_online + len_s3_offline, len_s3_total)
         s3_no_install_per = calculate_percentage(len_s3_no_install, len_s3_total)
 
-        print(f"S1椒图需要安装设备总量:{len_s1_total}")
-        print(f"S1椒图需要安装设备在线:{len_s1_online} 在线率:{s1_online_per:.2f}%")
-        print(f"S1椒图需要安装设备离线:{len_s1_offline} 离线率:{s1_offline_per:.2f}%")
-        print(f"S1椒图需要安装设备已安装:{len_s1_online + len_s1_offline} 安装率:{s1_install_per:.2f}%")
-        print(f"S1椒图需要安装设备未安装:{len_s1_no_install} 未安装率:{s1_no_install_per:.2f}%")
-        print(f"S3椒图需要安装设备总量:{len_s3_total}")
-        print(f"S3椒图需要安装设备在线:{len_s3_online} 在线率:{s3_online_per:.2f}%")
-        print(f"S3椒图需要安装设备离线:{len_s3_offline} 离线率:{s3_offline_per:.2f}%")
-        print(f"S3椒图需要安装设备已安装:{len_s3_online + len_s3_offline} 安装率:{s3_install_per:.2f}%")
-        print(f"S3椒图需要安装设备未安装:{len_s3_no_install} 未安装率:{s3_no_install_per:.2f}%")
+        logger.info(f"S1椒图需要安装设备总量:{len_s1_total}")
+        logger.info(f"S1椒图需要安装设备在线:{len_s1_online} 在线率:{s1_online_per:.2f}%")
+        logger.info(f"S1椒图需要安装设备离线:{len_s1_offline} 离线率:{s1_offline_per:.2f}%")
+        logger.info(f"S1椒图需要安装设备已安装:{len_s1_online + len_s1_offline} 安装率:{s1_install_per:.2f}%")
+        logger.info(f"S1椒图需要安装设备未安装:{len_s1_no_install} 未安装率:{s1_no_install_per:.2f}%")
+        logger.info(f"S3椒图需要安装设备总量:{len_s3_total}")
+        logger.info(f"S3椒图需要安装设备在线:{len_s3_online} 在线率:{s3_online_per:.2f}%")
+        logger.info(f"S3椒图需要安装设备离线:{len_s3_offline} 离线率:{s3_offline_per:.2f}%")
+        logger.info(f"S3椒图需要安装设备已安装:{len_s3_online + len_s3_offline} 安装率:{s3_install_per:.2f}%")
+        logger.info(f"S3椒图需要安装设备未安装:{len_s3_no_install} 未安装率:{s3_no_install_per:.2f}%")
 
         return {
             "data": {
@@ -1047,9 +1053,11 @@ class jowtoDataCount:
             # from tools.mysql import MySQL
             resDB = MySQL(sql=sql_insert).exec()
             print("数据成功写入数据库")
+            logger.info("数据成功写入数据库")
             return resDB
         except Exception as e:
             print(f"数据写入数据库失败: {e}")
+            logger.error(f"数据写入数据库失败: {e}")
             return False
 
 def run_jowto_data_count():
