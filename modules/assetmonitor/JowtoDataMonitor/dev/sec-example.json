@@ -1,0 +1,77 @@
+// res = secData.get_allip_message(limit=1, offset=1)
+// jowto_onlineStatus = 1
+// JOWTO_STATUS = (
+//         (0, '离线'),
+//         (1, '在线'),
+//         (2, '未安装')
+// )
+[
+    {
+        'ipassets_id': 38,
+        'ipassets_created': '2019-07-31 06: 54: 58',
+        'ipassets_updated': '2023-11-16 10: 50: 32',
+        'ipassets_ip_tags': '/R/应用系统/SSO@@/R/椒图必要性/需要安装@@/R/Q1攻防@@/R/平台打标/状态/在线', // IP标签
+        'ipassets_network_tags': '/R/安全域/内部服务器区/IDC Level 03@@/R/网段用途/业务服务器@@/R/椒图必要性/需要安装@@/R/Location/IDC/IDC LFK', // 网段标签
+        'ipassets_least_network_tags': '/R/安全域/内部服务器区/IDC Level 03@@/R/网段用途/业务服务器@@/R/椒图必要性/需要安装@@/R/Location/IDC/IDC LFK',   // 最小网段标签
+        'ipassets_is_interflow': '未知',
+        'ipassets_businessSystem': 'SSO-重要业务系统', // 业务系统字段
+        'ipassets_ip': '10.95.22.26',
+        'ipassets_ip_type': '内网', // 网络类型
+        'ipassets_data_source': 'Nmap,cmdb_ip,arp,jiaotu',
+        'ipassets_status': '在线',
+        'ipassets_online_rate': 100,
+        'ipassets_is_vip': 0,
+        'ipassets_is_dns': 0,
+        'ipassets_is_new': 0,
+        'ipassets_is_important': 1,
+        'ipassets_is_linked_jira_order': 0,
+        'ipassets_is_expose_public_ip': 0,
+        'ipassets_is_auto': 1,
+        'ipassets_has_vul': 0,
+        'ipassets_sec_remark': '工单系统线上环境从库地址',
+        'ipassets_ilo_ip': '10.95.64.46',
+        'ipassets_group': '奇安信',
+        'ipassets_mac': '6C-92-BF-16-1D-AF',
+        'ipassets_hostname': 'i102.ops.lfk.360es.cn',
+        'ipassets_machine_type': '物理机',
+        'ipassets_project_name': '运维与前端研发中心管理平台项目',
+        'ipassets_os': '',
+        'ipassets_ops_remark': 'SSO',
+        'ipassets_ops_operations_name': '黄挥伟',
+        'ipassets_ops_operations_domain': 'huanghuiwei',
+        'ipassets_ops_operations_department': '终端安全BG',
+        'ipassets_ops_operations_mail': 'huanghuiwei@qianxin.com',
+        'ipassets_ops_principal_name': '岳洋',
+        'ipassets_ops_principal_domain': 'yueyang',
+        'ipassets_ops_principal_department': '信息系统运维与IT管理服务中心',
+        'ipassets_ops_principal_mail': 'yueyang@qianxin.com',
+        'ipassets_sec_principal_name': '未登记',
+        'ipassets_sec_principal_domain': '',
+        'ipassets_sec_principal_department': '',
+        'ipassets_sec_principal_mail': '',
+        'ipassets_network_principal_name': '未知',
+        'ipassets_network_sec_principal_name': '未登记',
+        'ipassets_sec_domain': '',
+        'ipassets_rack_name': 'LFK-7F-1-4',
+        'ipassets_idc_name': '北京联发科', // 机房名称
+        'ipassets_vendor': '浪潮',
+        'ipassets_model': 'NF5270M3',
+        'ipassets_sn': '815114452',
+        'ipassets_fixed_asset_num': 'NS-SV10000716',
+        'ipassets_switch_ip': '10.95.2.13',
+        'ipassets_switch_port': 'GigabitEthernet1/0/27',
+        'ipassets_nmap_os': 'Linux 3.2 - 4.9',
+        'ipassets_other_iplist': '10.95.64.46',
+        'ipassets_lvs_all_ip': '',
+        'ipassets_log_status': '是',
+        'ipassets_base_installation_log_status': 'NA',
+        'ipassets_system_log_status': '是',
+        'ipassets_base_app_log_status': '是',
+        'ipassets_upper_app_log_status': 'NA',
+        'ipassets_bostion_host_status': '是',
+        'ipassets_wsus_status': '否',
+        'jowto_onlineStatus': 1, // 椒图在线状态 0 离线 1 在线 2 未安装
+        'ipassets_created_by': 'SaveJiaotuMachine',
+        'ipassets_updated_by': 'SaveJiaotuMachine'
+    }
+]

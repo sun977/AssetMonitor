@@ -1,0 +1,59 @@
+{
+  'sec_data_count': 83364,
+  'device_online_count': 67263,
+  'device_jowto_status_count_in_secArea': {
+    'jowto_online_count': {
+      'S1': 827,
+      'S2': 172,
+      'S3': 22121,
+      'S4': 497,
+      'S5': 53
+    },
+    'jowto_offline_count': {
+      'S1': 511,
+      'S2': 51,
+      'S3': 5401,
+      'S4': 85,
+      'S5': 2
+    },
+    'jowto_no_install_count': {
+      'S1': 269,
+      'S2': 3901,
+      'S3': 21817,
+      'S4': 11353,
+      'S5': 20
+    }
+  },
+  'device_online_in_shanghai_count': 11428,
+  'device_online_in_shanghai_need_jowto_count': 6039,
+  'device_online_in_shanghai_no_need_jowto_count': 3966,
+  'device_online_in_shanghai_no_jowto_tag_count': 1423,
+  'device_online_in_shanghai_need_jowto_status': {
+    'device_online_in_shanghai_need_jowto_online_count': 3466,
+    'device_online_in_shanghai_need_jowto_offline_count': 804,
+    'device_online_in_shanghai_need_jowto_no_install_count': 1769
+  },
+  'device_online_in_shanghai_jowto_status_count_in_secArea': {
+    'jowto_online_count': {
+      'S1': 367,
+      'S2': 6,
+      'S3': 2828,
+      'S4': 96,
+      'S5': 34
+    },
+    'jowto_offline_count': {
+      'S1': 413,
+      'S2': 7,
+      'S3': 319,
+      'S4': 2,
+      'S5': 2
+    },
+    'jowto_no_install_count': {
+      'S1': 140,
+      'S2': 16,
+      'S3': 1169,
+      'S4': 242,
+      'S5': 14
+    }
+  }
+}
