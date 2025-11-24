@@ -41,6 +41,10 @@ def read_from(file_path):
 def write_to(data_list, file_path):
     data_list = data_list
     file = file_path
+    # 确保目录存在
+    directory = os.path.dirname(file)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     # 打开out.txt文件
     with open(file, 'w') as f:
         # 写入list数据
