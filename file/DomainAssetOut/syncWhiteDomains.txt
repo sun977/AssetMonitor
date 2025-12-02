@@ -1,0 +1,2 @@
+{'domain': '*.xhaoma.net', 'owner': '智日俊', 'isWhite': 1, 'note': '智日俊-zhirijun@qianxin.com-南京信风内网测试使用,解析IP为回环测试IP', 'domainType': 'Internet'}
+{'domain': '*.qaxcloudwaf.com', 'owner': '吴健雄', 'isWhite': 0, 'note': '吴健雄-wujianxiong@qianxin.com-PDNS', 'domainType': 'Internet'}
