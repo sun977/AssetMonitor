@@ -153,8 +153,9 @@ def get_ips_all_status(ip_list):
         # print("COUNT:", result['count'])
         if result['count'] == 0:
             print(ip, '没有查询到资产信息！')
-            return result_list
-
+            logger.info(f"{ip}:没有查询到资产信息!")
+            # return result_list  # 如果返回则后续IP不会再判断
+            continue  # 跳过当前 IP，继续处理下一个  --- 20251202 fix
         else:
             # print(ip, '查询到资产信息如下')
             for data in result['data']:
